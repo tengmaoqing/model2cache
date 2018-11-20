@@ -1,26 +1,44 @@
-# compnent-test
+# vue-cache-data
+auto save **vue.data** into localStore or memery when **vue.data** change
+# Examples
+[example](https://github.com/tengmaoqing/vue-cache-data/tree/dev/example)
 
-## Project setup
-```
-npm install
-```
-
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
+# Usage
+## registe
+```javascript
+import VueCacheData from 'vue-cache-data'
+Vue.use(VueCacheData, options);
 ```
 
-### Run your tests
-```
-npm run test
-```
+## options
+#### cachePrefix
+localStore cache key prefix
 
-### Lints and fixes files
-```
-npm run lint
+## config cacheKeys
+```javascript
+export default {
+  data() {
+    return {
+      form: {
+        text: '',
+        memtext: '',
+        radio: false,
+        select: ''
+      },
+      count: 0,
+      other: 'xx'
+    };
+  },
+  // components option
+  cacheKeys: [
+    'form.text',
+    {
+      key: 'form.memtext',
+      useLocalStore: false
+    },
+    'form.radio',
+    'form.select',
+    'count'
+  ]
+}
 ```

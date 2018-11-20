@@ -1,5 +1,11 @@
+
 module.exports = {
+  ignore: [
+    "./dist",
+  ],
   presets: [
-    '@vue/app'
+    ['@vue/app', {
+      modules: false
+    }]
   ]
 }
