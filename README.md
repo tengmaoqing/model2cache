@@ -1,7 +1,8 @@
 # vue-cache-data
 auto save **vue.data** into localStore or memery when **vue.data** change
 # Examples
-[example](https://github.com/tengmaoqing/vue-cache-data/tree/dev/example)
+- [example code](https://github.com/tengmaoqing/vue-cache-data/tree/master/example) 
+- [example online](https://tengmaoqing.github.io/vue-cache-data/example/dist/)
 
 # Usage
 ## registe

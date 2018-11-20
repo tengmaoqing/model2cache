@@ -4,8 +4,6 @@ module.exports = {
     "./dist",
   ],
   presets: [
-    ['@vue/app', {
-      modules: false
-    }]
+    '@vue/app'
   ]
 }
