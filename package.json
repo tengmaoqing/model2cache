@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "bar": "git add . && echo \"bar\" && exit 0",
-    "rollup": "rollup -c"
+    "rollup": "rollup -c",
+    "lint-staged": "lint-staged"
   },
   "main": "dist/vueDataCache.umd.min.js",
   "dependencies": {},
@@ -23,7 +24,7 @@
     "vue": "^2.5.17",
     "vue-template-compiler": "^2.5.17"
   },
-  "pre-commit": "bar",
+  "pre-commit": "lint-staged",
   "gitHooks": {
     "commit-msg": "node scripts/verify-commit-msg.js"
   },
