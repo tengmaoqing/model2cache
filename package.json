@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "bar": "git add . && echo \"bar\" && exit 0",
-    "rollup": "rollup -c"
+    "rollup": "rollup -c",
+    "commit": "git-cz"
   },
   "main": "dist/vueDataCache.umd.min.js",
   "dependencies": {},
