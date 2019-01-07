@@ -3,23 +3,21 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build --target lib --name vueFormCache ./src/index.js",
-    "build-modern": "vue-cli-service build --modern",
-    "lint": "vue-cli-service lint",
-    "example": "vue-cli-service serve --modern",
-    "build-example": "vue-cli-service build --mode test"
+    "rollup": "rollup -c"
   },
   "main": "dist/vueFormCache.common.js",
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-plugin-external-helpers": "^6.22.0",
+    "babel-preset-latest": "^6.24.1",
     "lodash": "^4.17.11",
+    "rollup": "^1.0.1",
+    "rollup-plugin-babel": "^3.0.7",
+    "rollup-plugin-commonjs": "^9.2.0",
+    "rollup-plugin-node-resolve": "^4.0.0",
+    "terser": "^3.14.1",
     "vue": "^2.5.17",
-    "webpack-bundle-analyzer": "^3.0.3",
-    "@vue/cli-plugin-babel": "^3.0.5",
-    "@vue/cli-plugin-eslint": "^3.0.5",
-    "@vue/cli-service": "^3.0.5",
     "vue-template-compiler": "^2.5.17"
   },
   "eslintConfig": {
@@ -36,7 +34,9 @@
       "parser": "babel-eslint"
     }
   },
-  "eslintIgnore": ["vueFormCache.common.js"],
+  "eslintIgnore": [
+    "vueFormCache.common.js"
+  ],
   "postcss": {
     "plugins": {
       "autoprefixer": {}

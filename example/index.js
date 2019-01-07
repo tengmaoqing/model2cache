@@ -1,13 +1,38 @@
-/* eslint-disable */
-import VueCacheData from '../dist/vueFormCache.common.js'
-import Vue from 'vue'
-import App from './tp.vue'
+Vue.use(VueDataCache);
 
-Vue.use(VueCacheData);
-
-new Vue({
+const vm = new Vue({
   el: '#app',
-  render(h) {
-    return h(App)
+  data: {
+    form: {
+      text: '',
+      memtext: '',
+      radio: false,
+      select: ''
+    },
+    count: 0
+  },
+  cacheKeys: [
+    'form.text',
+    {
+      key: 'form.memtext',
+      useLocalStore: false
+    },
+    'form.radio',
+    'form.select',
+    'count'
+  ],
+  methods: {
+    counter () {
+      this.count += 1
+    },
+    reset () {
+      localStorage.clear()
+      this.reload()
+    },
+    reload () {
+      location.reload()
+    }
   }
 });
+
+vm.$mount();
