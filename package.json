@@ -47,6 +47,11 @@
     "type": "git",
     "url": "git+https://github.com/tengmaoqing/vue-cache-data.git"
   },
+  "keywords": [
+    "vue",
+    "cache",
+    "vue-data-cache"
+  ],
   "homepage": "https://github.com/tengmaoqing/vue-cache-data",
   "eslintConfig": {
     "root": true,
