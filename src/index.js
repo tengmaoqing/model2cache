@@ -1,7 +1,8 @@
 import get from 'lodash/get';
 import set from 'lodash/set';
 
-const DEFAULT_CACHE_KEY = '__TMQ_DEFAULT_KEY__';
+const DEFAULT_GLOBAL_CACHE_KEY = '__TMQ_DEFAULT_KEY__';
+const DEFAULT_OPTIONS_KEY = 'cacheKeys';
 const MemCache = {};
 
 /**
@@ -15,7 +16,7 @@ class AutoSaveForm {
 
   init (vm, options = {}) {
     this.vm = vm;
-    this.cacheKeys = vm.$options.cacheKeys.map(item => {
+    this.cacheKeys = vm.$options[options.optionKey].map(item => {
       let obj = {
         key: '',
         useLocalStore: true
@@ -27,7 +28,7 @@ class AutoSaveForm {
       }
       return obj;
     }) || [];
-    this.cachePrefix = options.cachePrefix || DEFAULT_CACHE_KEY;
+    this.cachePrefix = vm.$options.cachePrefix || options.cachePrefix || DEFAULT_GLOBAL_CACHE_KEY;
     this.MemCache = MemCache;
   }
 
@@ -85,10 +86,11 @@ class AutoSaveForm {
 }
 
 const AutoSaveFormForVue = {
-  install (Vue, options) {
+  install (Vue, options = {}) {
+    options.optionKey = options.optionKey || DEFAULT_OPTIONS_KEY;
     Vue.mixin({
       mounted () {
-        if (!this.$options.cacheKeys) {
+        if (!this.$options[options.optionKey]) {
           return;
         }
         this.$autoSave = new AutoSaveForm(this, options);
@@ -96,7 +98,7 @@ const AutoSaveFormForVue = {
         this.$autoSave.watchData();
       },
       destroyed () {
-        if (!this.$options.cacheKeys) {
+        if (!this.$options[options.optionKey]) {
           return;
         }
         this.$autoSave.destory();

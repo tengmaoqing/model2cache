@@ -30,7 +30,8 @@ var createClass = function () {
   };
 }();
 
-var DEFAULT_CACHE_KEY = '__TMQ_DEFAULT_KEY__';
+var DEFAULT_GLOBAL_CACHE_KEY = '__TMQ_DEFAULT_KEY__';
+var DEFAULT_OPTIONS_KEY = 'cacheKeys';
 var MemCache = {};
 
 /**
@@ -51,7 +52,7 @@ var AutoSaveForm = function () {
       var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
       this.vm = vm;
-      this.cacheKeys = vm.$options.cacheKeys.map(function (item) {
+      this.cacheKeys = vm.$options[options.optionKey].map(function (item) {
         var obj = {
           key: '',
           useLocalStore: true
@@ -63,7 +64,7 @@ var AutoSaveForm = function () {
         }
         return obj;
       }) || [];
-      this.cachePrefix = options.cachePrefix || DEFAULT_CACHE_KEY;
+      this.cachePrefix = vm.$options.cachePrefix || options.cachePrefix || DEFAULT_GLOBAL_CACHE_KEY;
       this.MemCache = MemCache;
     }
   }, {
@@ -141,10 +142,13 @@ var AutoSaveForm = function () {
 }();
 
 var AutoSaveFormForVue = {
-  install: function install(Vue, options) {
+  install: function install(Vue) {
+    var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+    options.optionKey = options.optionKey || DEFAULT_OPTIONS_KEY;
     Vue.mixin({
       mounted: function mounted() {
-        if (!this.$options.cacheKeys) {
+        if (!this.$options[options.optionKey]) {
           return;
         }
         this.$autoSave = new AutoSaveForm(this, options);
@@ -152,7 +156,7 @@ var AutoSaveFormForVue = {
         this.$autoSave.watchData();
       },
       destroyed: function destroyed() {
-        if (!this.$options.cacheKeys) {
+        if (!this.$options[options.optionKey]) {
           return;
         }
         this.$autoSave.destory();

@@ -1,3 +1,5 @@
+
+/* eslint-disable */
 Vue.use(VueDataCache);
 
 const vm = new Vue({
@@ -35,4 +37,13 @@ const vm = new Vue({
   }
 });
 
-vm.$mount();
+new Vue({
+  el: '#foo',
+  data: {
+    text: 1
+  },
+  cachePrefix: 'data_cache',
+  cacheKeys: [
+    'text'
+  ]
+})

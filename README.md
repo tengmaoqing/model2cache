@@ -12,8 +12,8 @@ Vue.use(VueCacheData, options);
 ```
 
 ## options
-#### cachePrefix
-localStore cache key prefix
+#### cachePrefix [String]
+prefix of the cache key
 
 ## config cacheKeys
 ```javascript
@@ -31,6 +31,7 @@ export default {
     };
   },
   // components option
+  cachePrefix: 'data_cache',
   cacheKeys: [
     'form.text',
     {
