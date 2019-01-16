@@ -9,6 +9,9 @@ else
 fi
 
 read -p "Releasing $VERSION - are you sure? (y/n) " -n 1 -r
+
+export VERSION=$VERSION
+
 echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
   echo "Releasing $VERSION ..."
