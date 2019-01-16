@@ -7,7 +7,7 @@
     "commit": "git-cz",
     "release": "bash scripts/release.sh",
     "release:note": "node scripts/gen-release-note.js",
-    "lint": "eslint src scripts"
+    "lint": "eslint src"
   },
   "main": "dist/vueDataCache.umd.min.js",
   "dependencies": {
