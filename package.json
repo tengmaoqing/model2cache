@@ -43,28 +43,11 @@
       "git add"
     ]
   },
-  "eslintConfig": {
-    "root": true,
-    "env": {
-      "node": true
-    },
-    "extends": [
-      "plugin:vue/essential",
-      "eslint:recommended"
-    ],
-    "rules": {},
-    "parserOptions": {
-      "parser": "babel-eslint"
-    }
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tengmaoqing/vue-cache-data.git"
   },
-  "eslintIgnore": [
-    "vueFormCache.common.js"
-  ],
-  "postcss": {
-    "plugins": {
-      "autoprefixer": {}
-    }
-  },
+  "homepage": "https://github.com/tengmaoqing/vue-cache-data",
   "browserslist": [
     "> 1%",
     "last 2 versions",

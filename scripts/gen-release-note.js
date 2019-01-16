@@ -1,5 +1,4 @@
 const version = process.argv[2] || process.env.VERSION
-console.log(version)
 const cc = require('conventional-changelog')
 const file = `./RELEASE_NOTE${version ? `_${version}` : ``}.md`
 const fileStream = require('fs').createWriteStream(file)
