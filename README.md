@@ -2,7 +2,7 @@
 auto save **vue.data** into localStore or memery when **vue.data** change
 # Examples
 - [example code](https://github.com/tengmaoqing/vue-cache-data/tree/master/example) 
-- [example online](https://tengmaoqing.github.io/vue-cache-data/example/dist/)
+- [example online](https://tengmaoqing.github.io/vue-cache-data/example/index.html)
 
 # Usage
 ## registe
