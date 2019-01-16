@@ -8,7 +8,8 @@
     "release:note": "node scripts/gen-release-note.js",
     "lint": "eslint src"
   },
-  "main": "dist/vueDataCache.umd.min.js",
+  "main": "dist/vueDataCache.umd.js",
+  "module": "dist/vueDataCache.esm.js",
   "dependencies": {
     "lodash": "^4.17.11"
   },
