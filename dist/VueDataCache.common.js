@@ -1,5 +1,5 @@
 /*!
- * VueDataCache.js v0.1.3
+ * VueDataCache.js v0.1.4
  * (c) 2014-2019 Teng Mao Qing
  * Released under the MIT License.
  */
