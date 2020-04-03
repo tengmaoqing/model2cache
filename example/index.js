@@ -2,7 +2,7 @@
 /* eslint-disable */
 Vue.use(VueDataCache);
 
-const vm = new Vue({
+const vueOpt = {
   el: '#app',
   data: {
     form: {
@@ -13,16 +13,18 @@ const vm = new Vue({
     },
     count: 0
   },
-  cacheKeys: [
-    'form.text',
-    {
-      key: 'form.memtext',
-      useLocalStore: false
-    },
-    'form.radio',
-    'form.select',
-    'count'
-  ],
+  cache: {
+    cacheKeys: [
+      'form.text',
+      {
+        key: 'form.memtext',
+        useLocalStore: false
+      },
+      'form.radio',
+      'form.select',
+      'count'
+    ]
+  },
   methods: {
     counter () {
       this.count += 1
@@ -35,15 +37,19 @@ const vm = new Vue({
       location.reload()
     }
   }
-});
+}
+
+const vm = new Vue(vueOpt);
 
 new Vue({
   el: '#foo',
   data: {
     text: 1
   },
-  cachePrefix: 'data_cache',
-  cacheKeys: [
-    'text'
-  ]
+  cache: {
+    cachePrefix: '__Tprefix__',
+    cacheKeys: [
+      'text'
+    ]
+  }
 })

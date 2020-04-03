@@ -1,168 +1,217 @@
 /*!
  * VueDataCache.js v0.1.4
- * (c) 2014-2019 Teng Mao Qing
+ * (c) 2014-2020 Teng Mao Qing
  * Released under the MIT License.
  */
 import get from 'lodash/get';
 import set from 'lodash/set';
 
-var classCallCheck = function (instance, Constructor) {
-  if (!(instance instanceof Constructor)) {
-    throw new TypeError("Cannot call a class as a function");
+const DEFAULT_GLOBAL_CACHE_KEY = '__TMQ_DEFAULT_KEY__';
+const DEFAULT_OPTIONS_KEY = 'cache';
+const MemCache = {};
+
+const log = function log() {
+  for (var _len = arguments.length, arg = new Array(_len), _key = 0; _key < _len; _key++) {
+    arg[_key] = arguments[_key];
   }
+
+  // eslint-disable-next-line no-console
+  console.log('[cache-data]:', ...arg);
 };
-
-var createClass = function () {
-  function defineProperties(target, props) {
-    for (var i = 0; i < props.length; i++) {
-      var descriptor = props[i];
-      descriptor.enumerable = descriptor.enumerable || false;
-      descriptor.configurable = true;
-      if ("value" in descriptor) descriptor.writable = true;
-      Object.defineProperty(target, descriptor.key, descriptor);
-    }
-  }
-
-  return function (Constructor, protoProps, staticProps) {
-    if (protoProps) defineProperties(Constructor.prototype, protoProps);
-    if (staticProps) defineProperties(Constructor, staticProps);
-    return Constructor;
-  };
-}();
-
-var DEFAULT_GLOBAL_CACHE_KEY = '__TMQ_DEFAULT_KEY__';
-var DEFAULT_OPTIONS_KEY = 'cacheKeys';
-var MemCache = {};
-
 /**
  * 默认存储在 LocalStore，
  * 可以配置存在内存中，在 路由跳转时保存，刷新丢失。
  */
 
-var AutoSaveForm = function () {
-  function AutoSaveForm() {
-    classCallCheck(this, AutoSaveForm);
+/**
+ *   new AutoSaveForm({
+ *     cachePrefix: '__prefix__'
+ *   })
+ */
 
-    this.init.apply(this, arguments);
+
+class AutoSaveForm {
+  constructor() {
+    this.init(...arguments);
   }
 
-  createClass(AutoSaveForm, [{
-    key: 'init',
-    value: function init(vm) {
-      var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+  init(vm) {
+    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+    this.isdebug = options.debug;
+    this.vm = vm;
+    this.$cacheOptions = vm.$options[options.optionKey]; // this.installStatic(vm)
 
-      this.vm = vm;
-      this.cacheKeys = vm.$options[options.optionKey].map(function (item) {
-        var obj = {
-          key: '',
-          useLocalStore: true
-        };
-        if (typeof item === 'string') {
-          obj.key = item;
-        } else {
-          Object.assign(obj, item);
-        }
-        return obj;
-      }) || [];
-      this.cachePrefix = vm.$options.cachePrefix || options.cachePrefix || DEFAULT_GLOBAL_CACHE_KEY;
-      this.MemCache = MemCache;
+    if (Array.isArray(this.$cacheOptions)) {
+      this.$cacheOptions = {
+        cacheKeys: this.$cacheOptions || []
+      };
     }
-  }, {
-    key: 'getLocalDate',
-    value: function getLocalDate(key) {
-      var cachev = localStorage.getItem('' + this.cachePrefix + key);
-      if (!cachev) {
-        return get(this.vm, key);
+
+    this.cacheKeys = this.$cacheOptions.cacheKeys.map(item => {
+      let obj = {
+        key: '',
+        useLocalStore: true
+      };
+
+      if (typeof item === 'string') {
+        obj.key = item;
+      } else {
+        Object.assign(obj, item);
       }
-      return JSON.parse(cachev);
-    }
-  }, {
-    key: 'getMemData',
-    value: function getMemData(key) {
-      return this.MemCache[key];
-    }
-  }, {
-    key: 'setLocalDate',
-    value: function setLocalDate(key, v) {
-      localStorage.setItem('' + this.cachePrefix + key, JSON.stringify(v));
-    }
-  }, {
-    key: 'setMemData',
-    value: function setMemData(key, v) {
-      this.MemCache[key] = v;
-    }
-  }, {
-    key: 'applyData',
-    value: function applyData() {
-      var _this = this;
 
-      this.cacheKeys.forEach(function (_ref) {
-        var key = _ref.key,
-            useLocalStore = _ref.useLocalStore;
+      return obj;
+    }) || [];
+    this.cachePrefix = this.$cacheOptions.cachePrefix || options.cachePrefix || DEFAULT_GLOBAL_CACHE_KEY;
+    this.MemCache = MemCache;
+  } // installStatic (vm) {
+  //   vm.$options.aaa = '22'
+  // }
 
-        var v = '';
-        if (useLocalStore) {
-          v = _this.getLocalDate(key);
-        } else {
-          v = _this.getMemData(key);
-        }
-        set(_this.vm, key, v);
+
+  getKeyConfig(key) {
+    return this.cacheKeys.find(keyObj => keyObj.key === key) || {};
+  }
+
+  getLocalData(key) {
+    const cachev = localStorage.getItem("".concat(this.cachePrefix).concat(key));
+
+    if (!cachev) {
+      return get(this.vm, key);
+    }
+
+    return JSON.parse(cachev);
+  }
+
+  getMemData(key) {
+    return this.MemCache[key];
+  }
+
+  getData(key) {
+    const {
+      useLocalStore
+    } = this.getKeyConfig(key);
+
+    if (useLocalStore) {
+      return this.getLocalData(key);
+    }
+
+    this.getMemData(key);
+  }
+
+  setLocalDate(key, v) {
+    localStorage.setItem("".concat(this.cachePrefix).concat(key), JSON.stringify(v));
+  }
+
+  setMemData(key, v) {
+    this.MemCache[key] = v;
+  }
+
+  setData(key, v) {
+    const {
+      useLocalStore
+    } = this.getKeyConfig(key);
+
+    if (useLocalStore) {
+      this.setLocalDate(key, v);
+      return;
+    }
+
+    this.setMemData(key, v);
+  }
+
+  applyData() {
+    this.cacheKeys.forEach((_ref) => {
+      let {
+        key
+      } = _ref;
+      const v = this.getData(key);
+      set(this.vm, key, v);
+    });
+  }
+
+  watchData() {
+    this.watchs = this.cacheKeys.map((_ref2) => {
+      let {
+        key
+      } = _ref2;
+      return this.vm.$watch(key, nv => {
+        this.isdebug && log('watch', key, nv);
+        this.setData(key, nv);
       });
+    });
+  }
+
+  destory() {
+    this.watchs.forEach(watchFn => watchFn());
+  }
+
+  deleteKey(key) {
+    const {
+      useLocalStore
+    } = this.getKeyConfig(key);
+
+    if (useLocalStore) {
+      localStorage.removeItem("".concat(this.cachePrefix).concat(key));
+      return;
     }
-  }, {
-    key: 'watchData',
-    value: function watchData() {
-      var _this2 = this;
 
-      this.watchs = this.cacheKeys.map(function (_ref2) {
-        var key = _ref2.key,
-            useLocalStore = _ref2.useLocalStore;
+    this.MemCache[key] = null;
+  }
 
-        return _this2.vm.$watch(key, function (nv) {
-          if (useLocalStore) {
-            _this2.setLocalDate(key, nv);
-            return;
-          }
-          _this2.setMemData(key, nv);
-        });
-      });
-    }
-  }, {
-    key: 'destory',
-    value: function destory() {
-      this.watchs.forEach(function (watchFn) {
-        return watchFn();
-      });
-    }
-  }, {
-    key: 'reset',
-    value: function reset() {}
-  }]);
-  return AutoSaveForm;
-}();
+  clear() {
+    this.cacheKeys.map((_ref3) => {
+      let {
+        key
+      } = _ref3;
+      this.deleteKey(key);
+    });
+  }
 
-var AutoSaveFormForVue = {
-  install: function install(Vue) {
-    var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+  reset() {}
 
+}
+/**
+ *  components Config / key config / global config
+ * 
+ *  export default {
+ *    cache: ['key', 'data.key'],
+ *    cache: {
+ *      cacheKeys: ['key', 'data.key', {
+ *        key: 'otherKey',
+          useLocalStore: false
+ *      }],
+ *      cachePrefix: '__prefix__'
+ *    }
+ *  }
+ */
+
+
+const AutoSaveFormForVue = {
+  install(Vue) {
+    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     options.optionKey = options.optionKey || DEFAULT_OPTIONS_KEY;
     Vue.mixin({
-      mounted: function mounted() {
+      mounted() {
         if (!this.$options[options.optionKey]) {
           return;
         }
+
         this.$autoSave = new AutoSaveForm(this, options);
         this.$autoSave.applyData();
         this.$autoSave.watchData();
       },
-      destroyed: function destroyed() {
+
+      destroyed() {
         if (!this.$options[options.optionKey]) {
           return;
         }
+
         this.$autoSave.destory();
       }
+
     });
   }
+
 };
 
 export default AutoSaveFormForVue;

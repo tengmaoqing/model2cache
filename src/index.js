@@ -1,110 +1,171 @@
-import get from 'lodash/get';
-import set from 'lodash/set';
+import get from 'lodash/get'
+import set from 'lodash/set'
+import isString from 'lodash/isString'
 
-const DEFAULT_GLOBAL_CACHE_KEY = '__TMQ_DEFAULT_KEY__';
-const DEFAULT_OPTIONS_KEY = 'cacheKeys';
-const MemCache = {};
+const DEFAULT_GLOBAL_CACHE_KEY = '__TMQ_DEFAULT_KEY__'
+const DEFAULT_OPTIONS_KEY = 'cache'
+const MemCache = {}
+
+const log = (...arg) => {
+  // eslint-disable-next-line no-console
+  console.log('[cache-data]:', ...arg)
+}
 
 /**
  * 默认存储在 LocalStore，
  * 可以配置存在内存中，在 路由跳转时保存，刷新丢失。
  */
-class AutoSaveForm {
+
+ /**
+  *   new Form2Cache({
+  *     cachePrefix: '__prefix__'
+  *   })
+  */
+export class Form2Cache {
   constructor (...args) {
-    this.init  (...args);
+    this.init(...args)
   }
 
-  init (vm, options = {}) {
-    this.vm = vm;
-    this.cacheKeys = vm.$options[options.optionKey].map(item => {
+  init (vm, options = {}, componentsOptions = {}) {
+
+    this.isdebug = options.debug
+    this.formModel = vm
+    this.$cacheOptions = componentsOptions
+    if (Array.isArray(this.$cacheOptions)) {
+      this.$cacheOptions = {
+        cacheKeys: this.$cacheOptions || []
+      }
+    }
+    this.cacheKeys = (this.$cacheOptions.cacheKeys || []).map(item => {
       let obj = {
         key: '',
         useLocalStore: true
-      };
-      if (typeof item === 'string') {
-        obj.key = item;
-      } else {
-        Object.assign(obj, item);
       }
-      return obj;
-    }) || [];
-    this.cachePrefix = vm.$options.cachePrefix || options.cachePrefix || DEFAULT_GLOBAL_CACHE_KEY;
-    this.MemCache = MemCache;
+      if (isString(item)) {
+        obj.key = item
+      } else {
+        Object.assign(obj, item)
+      }
+      return obj
+    })
+    this.cachePrefix = this.$cacheOptions.cachePrefix || options.cachePrefix || DEFAULT_GLOBAL_CACHE_KEY
+    this.MemCache = MemCache
   }
 
-  getLocalDate (key) {
-    const cachev = localStorage.getItem(`${this.cachePrefix}${key}`);
+  getKeyConfig (key) {
+    return this.cacheKeys.find(keyObj => keyObj.key === key) || {}
+  }
+
+  getLocalData (key) {
+    const cachev = localStorage.getItem(`${this.cachePrefix}${key}`)
     if (!cachev) {
-      return get(this.vm, key);
+      return get(this.formModel, key)
     }
-    return JSON.parse(cachev);
+    return JSON.parse(cachev)
   }
 
   getMemData (key) {
-    return this.MemCache[key];
+    return this.MemCache[key]
+  }
+
+  getData (key) {
+    const { useLocalStore } = this.getKeyConfig(key)
+    if (useLocalStore) {
+      return this.getLocalData(key)
+    }
+    this.getMemData(key)
   }
 
   setLocalDate (key, v) {
-    localStorage.setItem(`${this.cachePrefix}${key}`, JSON.stringify(v));
+    localStorage.setItem(`${this.cachePrefix}${key}`, JSON.stringify(v))
   }
 
   setMemData (key, v) {
-    this.MemCache[key] = v;
+    this.MemCache[key] = v
+  }
+
+  setData (key, v) {
+    const { useLocalStore } = this.getKeyConfig(key)
+    if (useLocalStore) {
+      this.setLocalDate(key, v)
+      return
+    }
+    this.setMemData(key, v)
   }
 
   applyData () {
-    this.cacheKeys.forEach(({ key, useLocalStore }) => {
-      let v = '';
-      if (useLocalStore) {
-        v = this.getLocalDate(key);
-      } else {
-        v = this.getMemData(key);
-      }
-      set(this.vm, key, v);
-    });
+    this.cacheKeys.forEach(({ key }) => {
+      const v = this.getData(key)
+      set(this.formModel, key, v)
+    })
   }
 
   watchData () {
-    this.watchs = this.cacheKeys.map(({ key, useLocalStore }) => {
-      return this.vm.$watch(key, (nv) => {
-        if (useLocalStore) {
-          this.setLocalDate(key, nv);
-          return;
-        }
-        this.setMemData(key, nv);
-      });
-    });
+    this.watchs = this.cacheKeys.map(({ key }) => {
+      return this.formModel.$watch(key, (nv) => {
+        this.isdebug && log('watch', key, nv)
+        this.setData(key, nv)
+      })
+    })
   }
 
   destory () {
-    this.watchs.forEach(watchFn => watchFn());
+    this.watchs.forEach(watchFn => watchFn())
+  }
+
+  deleteKey (key) {
+    const { useLocalStore } = this.getKeyConfig(key)
+    if (useLocalStore) {
+      localStorage.removeItem(`${this.cachePrefix}${key}`)
+      return
+    }
+    this.MemCache[key] = null
+  }
+
+  clear () {
+    this.cacheKeys.map(({ key }) => {
+      this.deleteKey(key)
+    })
   }
 
   reset () {
     
   }
 }
-
-const AutoSaveFormForVue = {
+/**
+ *  components Config / key config / global config
+ * 
+ *  export default {
+ *    cache: ['key', 'data.key'],
+ *    cache: {
+ *      cacheKeys: ['key', 'data.key', {
+ *        key: 'otherKey',
+          useLocalStore: false
+ *      }],
+ *      cachePrefix: '__prefix__'
+ *    }
+ *  }
+ */
+const Form2CacheForVue = {
   install (Vue, options = {}) {
-    options.optionKey = options.optionKey || DEFAULT_OPTIONS_KEY;
+    options.optionKey = options.optionKey || DEFAULT_OPTIONS_KEY
     Vue.mixin({
       mounted () {
         if (!this.$options[options.optionKey]) {
-          return;
+          return
         }
-        this.$autoSave = new AutoSaveForm(this, options);
-        this.$autoSave.applyData();
-        this.$autoSave.watchData();
+        this.$autoSave = new Form2Cache(this, options, this.$options[options.optionKey])
+        this.$autoSave.applyData()
+        this.$autoSave.watchData()
       },
       destroyed () {
         if (!this.$options[options.optionKey]) {
-          return;
+          return
         }
-        this.$autoSave.destory();
+        this.$autoSave.destory()
       }
-    });
+    })
   }
-};
+}
 
-export default AutoSaveFormForVue;
+export default Form2CacheForVue

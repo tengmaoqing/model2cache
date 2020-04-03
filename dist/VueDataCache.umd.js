@@ -1,13 +1,13 @@
 /*!
  * VueDataCache.js v0.1.4
- * (c) 2014-2019 Teng Mao Qing
+ * (c) 2014-2020 Teng Mao Qing
  * Released under the MIT License.
  */
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
 	typeof define === 'function' && define.amd ? define(factory) :
 	(global = global || self, global.VueDataCache = factory());
-}(this, function () { 'use strict';
+}(this, (function () { 'use strict';
 
 	/**
 	 * Checks if `value` is classified as an `Array` object.
@@ -33,45 +33,46 @@
 	 * // => false
 	 */
 	var isArray = Array.isArray;
-
 	var isArray_1 = isArray;
 
-	var commonjsGlobal = typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
+	var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 
 	/** Detect free variable `global` from Node.js. */
 	var freeGlobal = typeof commonjsGlobal == 'object' && commonjsGlobal && commonjsGlobal.Object === Object && commonjsGlobal;
-
 	var _freeGlobal = freeGlobal;
 
 	/** Detect free variable `self`. */
+
+
 	var freeSelf = typeof self == 'object' && self && self.Object === Object && self;
-
 	/** Used as a reference to the global object. */
-	var root = _freeGlobal || freeSelf || Function('return this')();
 
+	var root = _freeGlobal || freeSelf || Function('return this')();
 	var _root = root;
 
 	/** Built-in value references. */
-	var Symbol$1 = _root.Symbol;
 
-	var _Symbol = Symbol$1;
+
+	var Symbol = _root.Symbol;
+	var _Symbol = Symbol;
 
 	/** Used for built-in method references. */
+
+
 	var objectProto = Object.prototype;
-
 	/** Used to check objects for own properties. */
-	var hasOwnProperty = objectProto.hasOwnProperty;
 
+	var hasOwnProperty = objectProto.hasOwnProperty;
 	/**
 	 * Used to resolve the
 	 * [`toStringTag`](http://ecma-international.org/ecma-262/7.0/#sec-object.prototype.tostring)
 	 * of values.
 	 */
+
 	var nativeObjectToString = objectProto.toString;
-
 	/** Built-in value references. */
-	var symToStringTag = _Symbol ? _Symbol.toStringTag : undefined;
 
+	var symToStringTag = _Symbol ? _Symbol.toStringTag : undefined;
 	/**
 	 * A specialized version of `baseGetTag` which ignores `Symbol.toStringTag` values.
 	 *
@@ -79,6 +80,7 @@
 	 * @param {*} value The value to query.
 	 * @returns {string} Returns the raw `toStringTag`.
 	 */
+
 	function getRawTag(value) {
 	  var isOwn = hasOwnProperty.call(value, symToStringTag),
 	      tag = value[symToStringTag];
@@ -89,6 +91,7 @@
 	  } catch (e) {}
 
 	  var result = nativeObjectToString.call(value);
+
 	  if (unmasked) {
 	    if (isOwn) {
 	      value[symToStringTag] = tag;
@@ -96,6 +99,7 @@
 	      delete value[symToStringTag];
 	    }
 	  }
+
 	  return result;
 	}
 
@@ -103,14 +107,13 @@
 
 	/** Used for built-in method references. */
 	var objectProto$1 = Object.prototype;
-
 	/**
 	 * Used to resolve the
 	 * [`toStringTag`](http://ecma-international.org/ecma-262/7.0/#sec-object.prototype.tostring)
 	 * of values.
 	 */
-	var nativeObjectToString$1 = objectProto$1.toString;
 
+	var nativeObjectToString$1 = objectProto$1.toString;
 	/**
 	 * Converts `value` to a string using `Object.prototype.toString`.
 	 *
@@ -118,6 +121,7 @@
 	 * @param {*} value The value to convert.
 	 * @returns {string} Returns the converted string.
 	 */
+
 	function objectToString(value) {
 	  return nativeObjectToString$1.call(value);
 	}
@@ -125,12 +129,13 @@
 	var _objectToString = objectToString;
 
 	/** `Object#toString` result references. */
+
+
 	var nullTag = '[object Null]',
 	    undefinedTag = '[object Undefined]';
-
 	/** Built-in value references. */
-	var symToStringTag$1 = _Symbol ? _Symbol.toStringTag : undefined;
 
+	var symToStringTag$1 = _Symbol ? _Symbol.toStringTag : undefined;
 	/**
 	 * The base implementation of `getTag` without fallbacks for buggy environments.
 	 *
@@ -138,11 +143,13 @@
 	 * @param {*} value The value to query.
 	 * @returns {string} Returns the `toStringTag`.
 	 */
+
 	function baseGetTag(value) {
-	    if (value == null) {
-	        return value === undefined ? undefinedTag : nullTag;
-	    }
-	    return symToStringTag$1 && symToStringTag$1 in Object(value) ? _getRawTag(value) : _objectToString(value);
+	  if (value == null) {
+	    return value === undefined ? undefinedTag : nullTag;
+	  }
+
+	  return symToStringTag$1 && symToStringTag$1 in Object(value) ? _getRawTag(value) : _objectToString(value);
 	}
 
 	var _baseGetTag = baseGetTag;
@@ -178,8 +185,9 @@
 	var isObjectLike_1 = isObjectLike;
 
 	/** `Object#toString` result references. */
-	var symbolTag = '[object Symbol]';
 
+
+	var symbolTag = '[object Symbol]';
 	/**
 	 * Checks if `value` is classified as a `Symbol` primitive or object.
 	 *
@@ -197,16 +205,18 @@
 	 * _.isSymbol('abc');
 	 * // => false
 	 */
+
 	function isSymbol(value) {
-	    return typeof value == 'symbol' || isObjectLike_1(value) && _baseGetTag(value) == symbolTag;
+	  return typeof value == 'symbol' || isObjectLike_1(value) && _baseGetTag(value) == symbolTag;
 	}
 
 	var isSymbol_1 = isSymbol;
 
 	/** Used to match property names within property paths. */
+
+
 	var reIsDeepProp = /\.|\[(?:[^[\]]*|(["'])(?:(?!\1)[^\\]|\\.)*?\1)\]/,
 	    reIsPlainProp = /^\w*$/;
-
 	/**
 	 * Checks if `value` is a property name and not a property path.
 	 *
@@ -215,14 +225,18 @@
 	 * @param {Object} [object] The object to query keys on.
 	 * @returns {boolean} Returns `true` if `value` is a property name, else `false`.
 	 */
+
 	function isKey(value, object) {
 	  if (isArray_1(value)) {
 	    return false;
 	  }
+
 	  var type = typeof value;
+
 	  if (type == 'number' || type == 'symbol' || type == 'boolean' || value == null || isSymbol_1(value)) {
 	    return true;
 	  }
+
 	  return reIsPlainProp.test(value) || !reIsDeepProp.test(value) || object != null && value in Object(object);
 	}
 
@@ -261,11 +275,12 @@
 	var isObject_1 = isObject;
 
 	/** `Object#toString` result references. */
+
+
 	var asyncTag = '[object AsyncFunction]',
 	    funcTag = '[object Function]',
 	    genTag = '[object GeneratorFunction]',
 	    proxyTag = '[object Proxy]';
-
 	/**
 	 * Checks if `value` is classified as a `Function` object.
 	 *
@@ -283,29 +298,33 @@
 	 * _.isFunction(/abc/);
 	 * // => false
 	 */
+
 	function isFunction(value) {
-	    if (!isObject_1(value)) {
-	        return false;
-	    }
-	    // The use of `Object#toString` avoids issues with the `typeof` operator
-	    // in Safari 9 which returns 'object' for typed arrays and other constructors.
-	    var tag = _baseGetTag(value);
-	    return tag == funcTag || tag == genTag || tag == asyncTag || tag == proxyTag;
+	  if (!isObject_1(value)) {
+	    return false;
+	  } // The use of `Object#toString` avoids issues with the `typeof` operator
+	  // in Safari 9 which returns 'object' for typed arrays and other constructors.
+
+
+	  var tag = _baseGetTag(value);
+	  return tag == funcTag || tag == genTag || tag == asyncTag || tag == proxyTag;
 	}
 
 	var isFunction_1 = isFunction;
 
 	/** Used to detect overreaching core-js shims. */
-	var coreJsData = _root['__core-js_shared__'];
 
+
+	var coreJsData = _root['__core-js_shared__'];
 	var _coreJsData = coreJsData;
 
 	/** Used to detect methods masquerading as native. */
+
+
 	var maskSrcKey = function () {
 	  var uid = /[^.]+$/.exec(_coreJsData && _coreJsData.keys && _coreJsData.keys.IE_PROTO || '');
 	  return uid ? 'Symbol(src)_1.' + uid : '';
 	}();
-
 	/**
 	 * Checks if `func` has its source masked.
 	 *
@@ -313,6 +332,8 @@
 	 * @param {Function} func The function to check.
 	 * @returns {boolean} Returns `true` if `func` is masked, else `false`.
 	 */
+
+
 	function isMasked(func) {
 	  return !!maskSrcKey && maskSrcKey in func;
 	}
@@ -321,10 +342,9 @@
 
 	/** Used for built-in method references. */
 	var funcProto = Function.prototype;
-
 	/** Used to resolve the decompiled source of functions. */
-	var funcToString = funcProto.toString;
 
+	var funcToString = funcProto.toString;
 	/**
 	 * Converts `func` to its source code.
 	 *
@@ -332,15 +352,18 @@
 	 * @param {Function} func The function to convert.
 	 * @returns {string} Returns the source code.
 	 */
+
 	function toSource(func) {
 	  if (func != null) {
 	    try {
 	      return funcToString.call(func);
 	    } catch (e) {}
+
 	    try {
 	      return func + '';
 	    } catch (e) {}
 	  }
+
 	  return '';
 	}
 
@@ -350,24 +373,25 @@
 	 * Used to match `RegExp`
 	 * [syntax characters](http://ecma-international.org/ecma-262/7.0/#sec-patterns).
 	 */
+
+
 	var reRegExpChar = /[\\^$.*+?()[\]{}|]/g;
-
 	/** Used to detect host constructors (Safari). */
-	var reIsHostCtor = /^\[object .+?Constructor\]$/;
 
+	var reIsHostCtor = /^\[object .+?Constructor\]$/;
 	/** Used for built-in method references. */
+
 	var funcProto$1 = Function.prototype,
 	    objectProto$2 = Object.prototype;
-
 	/** Used to resolve the decompiled source of functions. */
+
 	var funcToString$1 = funcProto$1.toString;
-
 	/** Used to check objects for own properties. */
+
 	var hasOwnProperty$1 = objectProto$2.hasOwnProperty;
-
 	/** Used to detect if a method is native. */
-	var reIsNative = RegExp('^' + funcToString$1.call(hasOwnProperty$1).replace(reRegExpChar, '\\$&').replace(/hasOwnProperty|(function).*?(?=\\\()| for .+?(?=\\\])/g, '$1.*?') + '$');
 
+	var reIsNative = RegExp('^' + funcToString$1.call(hasOwnProperty$1).replace(reRegExpChar, '\\$&').replace(/hasOwnProperty|(function).*?(?=\\\()| for .+?(?=\\\])/g, '$1.*?') + '$');
 	/**
 	 * The base implementation of `_.isNative` without bad shim checks.
 	 *
@@ -376,10 +400,12 @@
 	 * @returns {boolean} Returns `true` if `value` is a native function,
 	 *  else `false`.
 	 */
+
 	function baseIsNative(value) {
 	  if (!isObject_1(value) || _isMasked(value)) {
 	    return false;
 	  }
+
 	  var pattern = isFunction_1(value) ? reIsNative : reIsHostCtor;
 	  return pattern.test(_toSource(value));
 	}
@@ -408,6 +434,8 @@
 	 * @param {string} key The key of the method to get.
 	 * @returns {*} Returns the function if it's native, else `undefined`.
 	 */
+
+
 	function getNative(object, key) {
 	  var value = _getValue(object, key);
 	  return _baseIsNative(value) ? value : undefined;
@@ -416,8 +444,9 @@
 	var _getNative = getNative;
 
 	/* Built-in method references that are verified to be native. */
-	var nativeCreate = _getNative(Object, 'create');
 
+
+	var nativeCreate = _getNative(Object, 'create');
 	var _nativeCreate = nativeCreate;
 
 	/**
@@ -427,6 +456,8 @@
 	 * @name clear
 	 * @memberOf Hash
 	 */
+
+
 	function hashClear() {
 	  this.__data__ = _nativeCreate ? _nativeCreate(null) : {};
 	  this.size = 0;
@@ -453,14 +484,15 @@
 	var _hashDelete = hashDelete;
 
 	/** Used to stand-in for `undefined` hash values. */
+
+
 	var HASH_UNDEFINED = '__lodash_hash_undefined__';
-
 	/** Used for built-in method references. */
+
 	var objectProto$3 = Object.prototype;
-
 	/** Used to check objects for own properties. */
-	var hasOwnProperty$2 = objectProto$3.hasOwnProperty;
 
+	var hasOwnProperty$2 = objectProto$3.hasOwnProperty;
 	/**
 	 * Gets the hash value for `key`.
 	 *
@@ -470,23 +502,27 @@
 	 * @param {string} key The key of the value to get.
 	 * @returns {*} Returns the entry value.
 	 */
+
 	function hashGet(key) {
 	  var data = this.__data__;
+
 	  if (_nativeCreate) {
 	    var result = data[key];
 	    return result === HASH_UNDEFINED ? undefined : result;
 	  }
+
 	  return hasOwnProperty$2.call(data, key) ? data[key] : undefined;
 	}
 
 	var _hashGet = hashGet;
 
 	/** Used for built-in method references. */
+
+
 	var objectProto$4 = Object.prototype;
-
 	/** Used to check objects for own properties. */
-	var hasOwnProperty$3 = objectProto$4.hasOwnProperty;
 
+	var hasOwnProperty$3 = objectProto$4.hasOwnProperty;
 	/**
 	 * Checks if a hash value for `key` exists.
 	 *
@@ -496,6 +532,7 @@
 	 * @param {string} key The key of the entry to check.
 	 * @returns {boolean} Returns `true` if an entry for `key` exists, else `false`.
 	 */
+
 	function hashHas(key) {
 	  var data = this.__data__;
 	  return _nativeCreate ? data[key] !== undefined : hasOwnProperty$3.call(data, key);
@@ -504,8 +541,9 @@
 	var _hashHas = hashHas;
 
 	/** Used to stand-in for `undefined` hash values. */
-	var HASH_UNDEFINED$1 = '__lodash_hash_undefined__';
 
+
+	var HASH_UNDEFINED$1 = '__lodash_hash_undefined__';
 	/**
 	 * Sets the hash `key` to `value`.
 	 *
@@ -516,6 +554,7 @@
 	 * @param {*} value The value to set.
 	 * @returns {Object} Returns the hash instance.
 	 */
+
 	function hashSet(key, value) {
 	  var data = this.__data__;
 	  this.size += this.has(key) ? 0 : 1;
@@ -532,24 +571,25 @@
 	 * @constructor
 	 * @param {Array} [entries] The key-value pairs to cache.
 	 */
+
+
 	function Hash(entries) {
-	    var index = -1,
-	        length = entries == null ? 0 : entries.length;
+	  var index = -1,
+	      length = entries == null ? 0 : entries.length;
+	  this.clear();
 
-	    this.clear();
-	    while (++index < length) {
-	        var entry = entries[index];
-	        this.set(entry[0], entry[1]);
-	    }
-	}
+	  while (++index < length) {
+	    var entry = entries[index];
+	    this.set(entry[0], entry[1]);
+	  }
+	} // Add methods to `Hash`.
 
-	// Add methods to `Hash`.
+
 	Hash.prototype.clear = _hashClear;
 	Hash.prototype['delete'] = _hashDelete;
 	Hash.prototype.get = _hashGet;
 	Hash.prototype.has = _hashHas;
 	Hash.prototype.set = _hashSet;
-
 	var _Hash = Hash;
 
 	/**
@@ -612,24 +652,29 @@
 	 * @param {*} key The key to search for.
 	 * @returns {number} Returns the index of the matched value, else `-1`.
 	 */
+
+
 	function assocIndexOf(array, key) {
 	  var length = array.length;
+
 	  while (length--) {
 	    if (eq_1(array[length][0], key)) {
 	      return length;
 	    }
 	  }
+
 	  return -1;
 	}
 
 	var _assocIndexOf = assocIndexOf;
 
 	/** Used for built-in method references. */
+
+
 	var arrayProto = Array.prototype;
-
 	/** Built-in value references. */
-	var splice = arrayProto.splice;
 
+	var splice = arrayProto.splice;
 	/**
 	 * Removes `key` and its value from the list cache.
 	 *
@@ -639,6 +684,7 @@
 	 * @param {string} key The key of the value to remove.
 	 * @returns {boolean} Returns `true` if the entry was removed, else `false`.
 	 */
+
 	function listCacheDelete(key) {
 	  var data = this.__data__,
 	      index = _assocIndexOf(data, key);
@@ -646,12 +692,15 @@
 	  if (index < 0) {
 	    return false;
 	  }
+
 	  var lastIndex = data.length - 1;
+
 	  if (index == lastIndex) {
 	    data.pop();
 	  } else {
 	    splice.call(data, index, 1);
 	  }
+
 	  --this.size;
 	  return true;
 	}
@@ -667,10 +716,11 @@
 	 * @param {string} key The key of the value to get.
 	 * @returns {*} Returns the entry value.
 	 */
+
+
 	function listCacheGet(key) {
 	  var data = this.__data__,
 	      index = _assocIndexOf(data, key);
-
 	  return index < 0 ? undefined : data[index][1];
 	}
 
@@ -685,6 +735,8 @@
 	 * @param {string} key The key of the entry to check.
 	 * @returns {boolean} Returns `true` if an entry for `key` exists, else `false`.
 	 */
+
+
 	function listCacheHas(key) {
 	  return _assocIndexOf(this.__data__, key) > -1;
 	}
@@ -701,6 +753,8 @@
 	 * @param {*} value The value to set.
 	 * @returns {Object} Returns the list cache instance.
 	 */
+
+
 	function listCacheSet(key, value) {
 	  var data = this.__data__,
 	      index = _assocIndexOf(data, key);
@@ -711,6 +765,7 @@
 	  } else {
 	    data[index][1] = value;
 	  }
+
 	  return this;
 	}
 
@@ -723,29 +778,31 @@
 	 * @constructor
 	 * @param {Array} [entries] The key-value pairs to cache.
 	 */
+
+
 	function ListCache(entries) {
-	    var index = -1,
-	        length = entries == null ? 0 : entries.length;
+	  var index = -1,
+	      length = entries == null ? 0 : entries.length;
+	  this.clear();
 
-	    this.clear();
-	    while (++index < length) {
-	        var entry = entries[index];
-	        this.set(entry[0], entry[1]);
-	    }
-	}
+	  while (++index < length) {
+	    var entry = entries[index];
+	    this.set(entry[0], entry[1]);
+	  }
+	} // Add methods to `ListCache`.
 
-	// Add methods to `ListCache`.
+
 	ListCache.prototype.clear = _listCacheClear;
 	ListCache.prototype['delete'] = _listCacheDelete;
 	ListCache.prototype.get = _listCacheGet;
 	ListCache.prototype.has = _listCacheHas;
 	ListCache.prototype.set = _listCacheSet;
-
 	var _ListCache = ListCache;
 
 	/* Built-in method references that are verified to be native. */
-	var Map = _getNative(_root, 'Map');
 
+
+	var Map = _getNative(_root, 'Map');
 	var _Map = Map;
 
 	/**
@@ -755,6 +812,8 @@
 	 * @name clear
 	 * @memberOf MapCache
 	 */
+
+
 	function mapCacheClear() {
 	  this.size = 0;
 	  this.__data__ = {
@@ -788,6 +847,8 @@
 	 * @param {string} key The reference key.
 	 * @returns {*} Returns the map data.
 	 */
+
+
 	function getMapData(map, key) {
 	  var data = map.__data__;
 	  return _isKeyable(key) ? data[typeof key == 'string' ? 'string' : 'hash'] : data.map;
@@ -804,6 +865,8 @@
 	 * @param {string} key The key of the value to remove.
 	 * @returns {boolean} Returns `true` if the entry was removed, else `false`.
 	 */
+
+
 	function mapCacheDelete(key) {
 	  var result = _getMapData(this, key)['delete'](key);
 	  this.size -= result ? 1 : 0;
@@ -821,6 +884,8 @@
 	 * @param {string} key The key of the value to get.
 	 * @returns {*} Returns the entry value.
 	 */
+
+
 	function mapCacheGet(key) {
 	  return _getMapData(this, key).get(key);
 	}
@@ -836,6 +901,8 @@
 	 * @param {string} key The key of the entry to check.
 	 * @returns {boolean} Returns `true` if an entry for `key` exists, else `false`.
 	 */
+
+
 	function mapCacheHas(key) {
 	  return _getMapData(this, key).has(key);
 	}
@@ -852,10 +919,11 @@
 	 * @param {*} value The value to set.
 	 * @returns {Object} Returns the map cache instance.
 	 */
+
+
 	function mapCacheSet(key, value) {
 	  var data = _getMapData(this, key),
 	      size = data.size;
-
 	  data.set(key, value);
 	  this.size += data.size == size ? 0 : 1;
 	  return this;
@@ -870,29 +938,31 @@
 	 * @constructor
 	 * @param {Array} [entries] The key-value pairs to cache.
 	 */
+
+
 	function MapCache(entries) {
-	    var index = -1,
-	        length = entries == null ? 0 : entries.length;
+	  var index = -1,
+	      length = entries == null ? 0 : entries.length;
+	  this.clear();
 
-	    this.clear();
-	    while (++index < length) {
-	        var entry = entries[index];
-	        this.set(entry[0], entry[1]);
-	    }
-	}
+	  while (++index < length) {
+	    var entry = entries[index];
+	    this.set(entry[0], entry[1]);
+	  }
+	} // Add methods to `MapCache`.
 
-	// Add methods to `MapCache`.
+
 	MapCache.prototype.clear = _mapCacheClear;
 	MapCache.prototype['delete'] = _mapCacheDelete;
 	MapCache.prototype.get = _mapCacheGet;
 	MapCache.prototype.has = _mapCacheHas;
 	MapCache.prototype.set = _mapCacheSet;
-
 	var _MapCache = MapCache;
 
 	/** Error message constants. */
-	var FUNC_ERROR_TEXT = 'Expected a function';
 
+
+	var FUNC_ERROR_TEXT = 'Expected a function';
 	/**
 	 * Creates a function that memoizes the result of `func`. If `resolver` is
 	 * provided, it determines the cache key for storing the result based on the
@@ -937,10 +1007,12 @@
 	 * // Replace `_.memoize.Cache`.
 	 * _.memoize.Cache = WeakMap;
 	 */
+
 	function memoize(func, resolver) {
 	  if (typeof func != 'function' || resolver != null && typeof resolver != 'function') {
 	    throw new TypeError(FUNC_ERROR_TEXT);
 	  }
+
 	  var memoized = function () {
 	    var args = arguments,
 	        key = resolver ? resolver.apply(this, args) : args[0],
@@ -949,22 +1021,24 @@
 	    if (cache.has(key)) {
 	      return cache.get(key);
 	    }
+
 	    var result = func.apply(this, args);
 	    memoized.cache = cache.set(key, result) || cache;
 	    return result;
 	  };
+
 	  memoized.cache = new (memoize.Cache || _MapCache)();
 	  return memoized;
-	}
+	} // Expose `MapCache`.
 
-	// Expose `MapCache`.
+
 	memoize.Cache = _MapCache;
-
 	var memoize_1 = memoize;
 
 	/** Used as the maximum memoize cache size. */
-	var MAX_MEMOIZE_SIZE = 500;
 
+
+	var MAX_MEMOIZE_SIZE = 500;
 	/**
 	 * A specialized version of `_.memoize` which clears the memoized function's
 	 * cache when it exceeds `MAX_MEMOIZE_SIZE`.
@@ -973,14 +1047,15 @@
 	 * @param {Function} func The function to have its output memoized.
 	 * @returns {Function} Returns the new memoized function.
 	 */
+
 	function memoizeCapped(func) {
 	  var result = memoize_1(func, function (key) {
 	    if (cache.size === MAX_MEMOIZE_SIZE) {
 	      cache.clear();
 	    }
+
 	    return key;
 	  });
-
 	  var cache = result.cache;
 	  return result;
 	}
@@ -988,11 +1063,12 @@
 	var _memoizeCapped = memoizeCapped;
 
 	/** Used to match property names within property paths. */
+
+
 	var rePropName = /[^.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\\]|\\.)*?)\2)\]|(?=(?:\.|\[\])(?:\.|\[\]|$))/g;
-
 	/** Used to match backslashes in property paths. */
-	var reEscapeChar = /\\(\\)?/g;
 
+	var reEscapeChar = /\\(\\)?/g;
 	/**
 	 * Converts `string` to a property path array.
 	 *
@@ -1000,17 +1076,21 @@
 	 * @param {string} string The string to convert.
 	 * @returns {Array} Returns the property path array.
 	 */
+
 	var stringToPath = _memoizeCapped(function (string) {
 	  var result = [];
-	  if (string.charCodeAt(0) === 46 /* . */) {
+
+	  if (string.charCodeAt(0) === 46
+	  /* . */
+	  ) {
 	      result.push('');
 	    }
+
 	  string.replace(rePropName, function (match, number, quote, subString) {
 	    result.push(quote ? subString.replace(reEscapeChar, '$1') : number || match);
 	  });
 	  return result;
 	});
-
 	var _stringToPath = stringToPath;
 
 	/**
@@ -1030,18 +1110,20 @@
 	  while (++index < length) {
 	    result[index] = iteratee(array[index], index, array);
 	  }
+
 	  return result;
 	}
 
 	var _arrayMap = arrayMap;
 
 	/** Used as references for various `Number` constants. */
-	var INFINITY = 1 / 0;
 
+
+	var INFINITY = 1 / 0;
 	/** Used to convert symbols to primitives and strings. */
+
 	var symbolProto = _Symbol ? _Symbol.prototype : undefined,
 	    symbolToString = symbolProto ? symbolProto.toString : undefined;
-
 	/**
 	 * The base implementation of `_.toString` which doesn't convert nullish
 	 * values to empty strings.
@@ -1050,18 +1132,22 @@
 	 * @param {*} value The value to process.
 	 * @returns {string} Returns the string.
 	 */
+
 	function baseToString(value) {
 	  // Exit early for strings to avoid a performance hit in some environments.
 	  if (typeof value == 'string') {
 	    return value;
 	  }
+
 	  if (isArray_1(value)) {
 	    // Recursively convert values (susceptible to call stack limits).
 	    return _arrayMap(value, baseToString) + '';
 	  }
+
 	  if (isSymbol_1(value)) {
 	    return symbolToString ? symbolToString.call(value) : '';
 	  }
+
 	  var result = value + '';
 	  return result == '0' && 1 / value == -INFINITY ? '-0' : result;
 	}
@@ -1089,6 +1175,8 @@
 	 * _.toString([1, 2, 3]);
 	 * // => '1,2,3'
 	 */
+
+
 	function toString(value) {
 	  return value == null ? '' : _baseToString(value);
 	}
@@ -1103,18 +1191,22 @@
 	 * @param {Object} [object] The object to query keys on.
 	 * @returns {Array} Returns the cast property path array.
 	 */
+
+
 	function castPath(value, object) {
 	  if (isArray_1(value)) {
 	    return value;
 	  }
+
 	  return _isKey(value, object) ? [value] : _stringToPath(toString_1(value));
 	}
 
 	var _castPath = castPath;
 
 	/** Used as references for various `Number` constants. */
-	var INFINITY$1 = 1 / 0;
 
+
+	var INFINITY$1 = 1 / 0;
 	/**
 	 * Converts `value` to a string key if it's not a string or symbol.
 	 *
@@ -1122,10 +1214,12 @@
 	 * @param {*} value The value to inspect.
 	 * @returns {string|symbol} Returns the key.
 	 */
+
 	function toKey(value) {
 	  if (typeof value == 'string' || isSymbol_1(value)) {
 	    return value;
 	  }
+
 	  var result = value + '';
 	  return result == '0' && 1 / value == -INFINITY$1 ? '-0' : result;
 	}
@@ -1140,15 +1234,17 @@
 	 * @param {Array|string} path The path of the property to get.
 	 * @returns {*} Returns the resolved value.
 	 */
+
+
 	function baseGet(object, path) {
 	  path = _castPath(path, object);
-
 	  var index = 0,
 	      length = path.length;
 
 	  while (object != null && index < length) {
 	    object = object[_toKey(path[index++])];
 	  }
+
 	  return index && index == length ? object : undefined;
 	}
 
@@ -1179,6 +1275,8 @@
 	 * _.get(object, 'a.b.c', 'default');
 	 * // => 'default'
 	 */
+
+
 	function get(object, path, defaultValue) {
 	  var result = object == null ? undefined : _baseGet(object, path);
 	  return result === undefined ? defaultValue : result;
@@ -1205,6 +1303,8 @@
 	 * @param {string} key The key of the property to assign.
 	 * @param {*} value The value to assign.
 	 */
+
+
 	function baseAssignValue(object, key, value) {
 	  if (key == '__proto__' && _defineProperty) {
 	    _defineProperty(object, key, {
@@ -1221,11 +1321,12 @@
 	var _baseAssignValue = baseAssignValue;
 
 	/** Used for built-in method references. */
+
+
 	var objectProto$5 = Object.prototype;
-
 	/** Used to check objects for own properties. */
-	var hasOwnProperty$4 = objectProto$5.hasOwnProperty;
 
+	var hasOwnProperty$4 = objectProto$5.hasOwnProperty;
 	/**
 	 * Assigns `value` to `key` of `object` if the existing value is not equivalent
 	 * using [`SameValueZero`](http://ecma-international.org/ecma-262/7.0/#sec-samevaluezero)
@@ -1236,8 +1337,10 @@
 	 * @param {string} key The key of the property to assign.
 	 * @param {*} value The value to assign.
 	 */
+
 	function assignValue(object, key, value) {
 	  var objValue = object[key];
+
 	  if (!(hasOwnProperty$4.call(object, key) && eq_1(objValue, value)) || value === undefined && !(key in object)) {
 	    _baseAssignValue(object, key, value);
 	  }
@@ -1247,10 +1350,9 @@
 
 	/** Used as references for various `Number` constants. */
 	var MAX_SAFE_INTEGER = 9007199254740991;
-
 	/** Used to detect unsigned integer values. */
-	var reIsUint = /^(?:0|[1-9]\d*)$/;
 
+	var reIsUint = /^(?:0|[1-9]\d*)$/;
 	/**
 	 * Checks if `value` is a valid array-like index.
 	 *
@@ -1259,10 +1361,10 @@
 	 * @param {number} [length=MAX_SAFE_INTEGER] The upper bounds of a valid index.
 	 * @returns {boolean} Returns `true` if `value` is a valid index, else `false`.
 	 */
+
 	function isIndex(value, length) {
 	  var type = typeof value;
 	  length = length == null ? MAX_SAFE_INTEGER : length;
-
 	  return !!length && (type == 'number' || type != 'symbol' && reIsUint.test(value)) && value > -1 && value % 1 == 0 && value < length;
 	}
 
@@ -1278,12 +1380,14 @@
 	 * @param {Function} [customizer] The function to customize path creation.
 	 * @returns {Object} Returns `object`.
 	 */
+
+
 	function baseSet(object, path, value, customizer) {
 	  if (!isObject_1(object)) {
 	    return object;
 	  }
-	  path = _castPath(path, object);
 
+	  path = _castPath(path, object);
 	  var index = -1,
 	      length = path.length,
 	      lastIndex = length - 1,
@@ -1296,13 +1400,16 @@
 	    if (index != lastIndex) {
 	      var objValue = nested[key];
 	      newValue = customizer ? customizer(objValue, key, nested) : undefined;
+
 	      if (newValue === undefined) {
 	        newValue = isObject_1(objValue) ? objValue : _isIndex(path[index + 1]) ? [] : {};
 	      }
 	    }
+
 	    _assignValue(nested, key, newValue);
 	    nested = nested[key];
 	  }
+
 	  return object;
 	}
 
@@ -1336,171 +1443,222 @@
 	 * console.log(object.x[0].y.z);
 	 * // => 5
 	 */
+
+
 	function set(object, path, value) {
 	  return object == null ? object : _baseSet(object, path, value);
 	}
 
 	var set_1 = set;
 
-	var classCallCheck = function (instance, Constructor) {
-	  if (!(instance instanceof Constructor)) {
-	    throw new TypeError("Cannot call a class as a function");
+	const DEFAULT_GLOBAL_CACHE_KEY = '__TMQ_DEFAULT_KEY__';
+	const DEFAULT_OPTIONS_KEY = 'cache';
+	const MemCache = {};
+
+	const log = function log() {
+	  for (var _len = arguments.length, arg = new Array(_len), _key = 0; _key < _len; _key++) {
+	    arg[_key] = arguments[_key];
 	  }
+
+	  // eslint-disable-next-line no-console
+	  console.log('[cache-data]:', ...arg);
 	};
-
-	var createClass = function () {
-	  function defineProperties(target, props) {
-	    for (var i = 0; i < props.length; i++) {
-	      var descriptor = props[i];
-	      descriptor.enumerable = descriptor.enumerable || false;
-	      descriptor.configurable = true;
-	      if ("value" in descriptor) descriptor.writable = true;
-	      Object.defineProperty(target, descriptor.key, descriptor);
-	    }
-	  }
-
-	  return function (Constructor, protoProps, staticProps) {
-	    if (protoProps) defineProperties(Constructor.prototype, protoProps);
-	    if (staticProps) defineProperties(Constructor, staticProps);
-	    return Constructor;
-	  };
-	}();
-
-	var DEFAULT_GLOBAL_CACHE_KEY = '__TMQ_DEFAULT_KEY__';
-	var DEFAULT_OPTIONS_KEY = 'cacheKeys';
-	var MemCache = {};
-
 	/**
 	 * 默认存储在 LocalStore，
 	 * 可以配置存在内存中，在 路由跳转时保存，刷新丢失。
 	 */
 
-	var AutoSaveForm = function () {
-	  function AutoSaveForm() {
-	    classCallCheck(this, AutoSaveForm);
+	/**
+	 *   new AutoSaveForm({
+	 *     cachePrefix: '__prefix__'
+	 *   })
+	 */
 
-	    this.init.apply(this, arguments);
+
+	class AutoSaveForm {
+	  constructor() {
+	    this.init(...arguments);
 	  }
 
-	  createClass(AutoSaveForm, [{
-	    key: 'init',
-	    value: function init(vm) {
-	      var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+	  init(vm) {
+	    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+	    this.isdebug = options.debug;
+	    this.vm = vm;
+	    this.$cacheOptions = vm.$options[options.optionKey]; // this.installStatic(vm)
 
-	      this.vm = vm;
-	      this.cacheKeys = vm.$options[options.optionKey].map(function (item) {
-	        var obj = {
-	          key: '',
-	          useLocalStore: true
-	        };
-	        if (typeof item === 'string') {
-	          obj.key = item;
-	        } else {
-	          Object.assign(obj, item);
-	        }
-	        return obj;
-	      }) || [];
-	      this.cachePrefix = vm.$options.cachePrefix || options.cachePrefix || DEFAULT_GLOBAL_CACHE_KEY;
-	      this.MemCache = MemCache;
+	    if (Array.isArray(this.$cacheOptions)) {
+	      this.$cacheOptions = {
+	        cacheKeys: this.$cacheOptions || []
+	      };
 	    }
-	  }, {
-	    key: 'getLocalDate',
-	    value: function getLocalDate(key) {
-	      var cachev = localStorage.getItem('' + this.cachePrefix + key);
-	      if (!cachev) {
-	        return get_1(this.vm, key);
+
+	    this.cacheKeys = this.$cacheOptions.cacheKeys.map(item => {
+	      let obj = {
+	        key: '',
+	        useLocalStore: true
+	      };
+
+	      if (typeof item === 'string') {
+	        obj.key = item;
+	      } else {
+	        Object.assign(obj, item);
 	      }
-	      return JSON.parse(cachev);
-	    }
-	  }, {
-	    key: 'getMemData',
-	    value: function getMemData(key) {
-	      return this.MemCache[key];
-	    }
-	  }, {
-	    key: 'setLocalDate',
-	    value: function setLocalDate(key, v) {
-	      localStorage.setItem('' + this.cachePrefix + key, JSON.stringify(v));
-	    }
-	  }, {
-	    key: 'setMemData',
-	    value: function setMemData(key, v) {
-	      this.MemCache[key] = v;
-	    }
-	  }, {
-	    key: 'applyData',
-	    value: function applyData() {
-	      var _this = this;
 
-	      this.cacheKeys.forEach(function (_ref) {
-	        var key = _ref.key,
-	            useLocalStore = _ref.useLocalStore;
+	      return obj;
+	    }) || [];
+	    this.cachePrefix = this.$cacheOptions.cachePrefix || options.cachePrefix || DEFAULT_GLOBAL_CACHE_KEY;
+	    this.MemCache = MemCache;
+	  } // installStatic (vm) {
+	  //   vm.$options.aaa = '22'
+	  // }
 
-	        var v = '';
-	        if (useLocalStore) {
-	          v = _this.getLocalDate(key);
-	        } else {
-	          v = _this.getMemData(key);
-	        }
-	        set_1(_this.vm, key, v);
+
+	  getKeyConfig(key) {
+	    return this.cacheKeys.find(keyObj => keyObj.key === key) || {};
+	  }
+
+	  getLocalData(key) {
+	    const cachev = localStorage.getItem("".concat(this.cachePrefix).concat(key));
+
+	    if (!cachev) {
+	      return get_1(this.vm, key);
+	    }
+
+	    return JSON.parse(cachev);
+	  }
+
+	  getMemData(key) {
+	    return this.MemCache[key];
+	  }
+
+	  getData(key) {
+	    const {
+	      useLocalStore
+	    } = this.getKeyConfig(key);
+
+	    if (useLocalStore) {
+	      return this.getLocalData(key);
+	    }
+
+	    this.getMemData(key);
+	  }
+
+	  setLocalDate(key, v) {
+	    localStorage.setItem("".concat(this.cachePrefix).concat(key), JSON.stringify(v));
+	  }
+
+	  setMemData(key, v) {
+	    this.MemCache[key] = v;
+	  }
+
+	  setData(key, v) {
+	    const {
+	      useLocalStore
+	    } = this.getKeyConfig(key);
+
+	    if (useLocalStore) {
+	      this.setLocalDate(key, v);
+	      return;
+	    }
+
+	    this.setMemData(key, v);
+	  }
+
+	  applyData() {
+	    this.cacheKeys.forEach((_ref) => {
+	      let {
+	        key
+	      } = _ref;
+	      const v = this.getData(key);
+	      set_1(this.vm, key, v);
+	    });
+	  }
+
+	  watchData() {
+	    this.watchs = this.cacheKeys.map((_ref2) => {
+	      let {
+	        key
+	      } = _ref2;
+	      return this.vm.$watch(key, nv => {
+	        this.isdebug && log('watch', key, nv);
+	        this.setData(key, nv);
 	      });
+	    });
+	  }
+
+	  destory() {
+	    this.watchs.forEach(watchFn => watchFn());
+	  }
+
+	  deleteKey(key) {
+	    const {
+	      useLocalStore
+	    } = this.getKeyConfig(key);
+
+	    if (useLocalStore) {
+	      localStorage.removeItem("".concat(this.cachePrefix).concat(key));
+	      return;
 	    }
-	  }, {
-	    key: 'watchData',
-	    value: function watchData() {
-	      var _this2 = this;
 
-	      this.watchs = this.cacheKeys.map(function (_ref2) {
-	        var key = _ref2.key,
-	            useLocalStore = _ref2.useLocalStore;
+	    this.MemCache[key] = null;
+	  }
 
-	        return _this2.vm.$watch(key, function (nv) {
-	          if (useLocalStore) {
-	            _this2.setLocalDate(key, nv);
-	            return;
-	          }
-	          _this2.setMemData(key, nv);
-	        });
-	      });
-	    }
-	  }, {
-	    key: 'destory',
-	    value: function destory() {
-	      this.watchs.forEach(function (watchFn) {
-	        return watchFn();
-	      });
-	    }
-	  }, {
-	    key: 'reset',
-	    value: function reset() {}
-	  }]);
-	  return AutoSaveForm;
-	}();
+	  clear() {
+	    this.cacheKeys.map((_ref3) => {
+	      let {
+	        key
+	      } = _ref3;
+	      this.deleteKey(key);
+	    });
+	  }
 
-	var AutoSaveFormForVue = {
-	  install: function install(Vue) {
-	    var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+	  reset() {}
 
+	}
+	/**
+	 *  components Config / key config / global config
+	 * 
+	 *  export default {
+	 *    cache: ['key', 'data.key'],
+	 *    cache: {
+	 *      cacheKeys: ['key', 'data.key', {
+	 *        key: 'otherKey',
+	          useLocalStore: false
+	 *      }],
+	 *      cachePrefix: '__prefix__'
+	 *    }
+	 *  }
+	 */
+
+
+	const AutoSaveFormForVue = {
+	  install(Vue) {
+	    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 	    options.optionKey = options.optionKey || DEFAULT_OPTIONS_KEY;
 	    Vue.mixin({
-	      mounted: function mounted() {
+	      mounted() {
 	        if (!this.$options[options.optionKey]) {
 	          return;
 	        }
+
 	        this.$autoSave = new AutoSaveForm(this, options);
 	        this.$autoSave.applyData();
 	        this.$autoSave.watchData();
 	      },
-	      destroyed: function destroyed() {
+
+	      destroyed() {
 	        if (!this.$options[options.optionKey]) {
 	          return;
 	        }
+
 	        this.$autoSave.destory();
 	      }
+
 	    });
 	  }
+
 	};
 
 	return AutoSaveFormForVue;
 
-}));
+})));
