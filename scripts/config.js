@@ -5,13 +5,14 @@ const cjs = require('rollup-plugin-commonjs')
 // const replace = require('rollup-plugin-replace')
 const node = require('rollup-plugin-node-resolve')
 // const flow = require('rollup-plugin-flow-no-whitespace')
-const version = process.env.VERSION || require('../package.json').version
+const pkg = require('../package.json')
+const version = process.env.VERSION || pkg.version
 // const weexVersion = process.env.WEEX_VERSION || require('../packages/weex-vue-framework/package.json').version
 
 const banner =
   '/*!\n' +
-  ` * VueDataCache.js v${version}\n` +
-  ` * (c) 2014-${new Date().getFullYear()} Teng Mao Qing\n` +
+  ` * Model2Cache.js v${version}\n` +
+  ` * (c) 2019-${new Date().getFullYear()} Teng Mao Qing\n` +
   ' * Released under the MIT License.\n' +
   ' */'
 
@@ -37,37 +38,34 @@ const banner =
 const builds = {
   'web-compiler-browser': {
     entry: 'src/index.js',
-    dest: 'dist/VueDataCache.umd.js',
+    dest: `dist/${pkg.name}.umd.js`,
     format: 'umd',
     env: 'development',
-    moduleName: 'VueDataCache',
-    // external: ['lodash/set', 'lodash/get'],
+    moduleName: 'Model2Cache',
     plugins: [node(), cjs()],
     banner
   },
   'web-compiler-browser-prod': {
     entry: 'src/index.js',
-    dest: 'dist/VueDataCache.umd.min.js',
+    dest: `dist/${pkg.name}.umd.min.js`,
     format: 'umd',
-    env: 'development',
-    moduleName: 'VueDataCache',
-    // external: ['lodash/set', 'lodash/get'],
+    moduleName: 'Model2Cache',
     plugins: [node(), cjs()],
     banner
   },
   'web-compiler': {
     entry: 'src/index.js',
-    dest: 'dist/VueDataCache.common.js',
+    dest: `dist/${pkg.name}.common.js`,
     format: 'cjs',
-    external: ['lodash/set', 'lodash/get'],
+    external: ['lodash/set', 'lodash/get', 'lodash/isString', 'lodash/isFunction'],
     // external: Object.keys(require('../packages/vue-template-compiler/package.json').dependencies),
     banner
   },
   'web-esm': {
     entry: 'src/index.js',
-    dest: 'dist/VueDataCache.esm.js',
+    dest: `dist/${pkg.name}.esm.js`,
     format: 'es',
-    external: ['lodash/set', 'lodash/get'],
+    external: ['lodash/set', 'lodash/get', 'lodash/isString', 'lodash/isFunction'],
     banner
   },
 }
@@ -85,7 +83,7 @@ function genConfig (name) {
       file: opts.dest,
       format: opts.format,
       banner: opts.banner,
-      name: opts.moduleName || 'VueDataCache'
+      name: opts.moduleName || 'Model2Cache'
     },
     onwarn: (msg, warn) => {
       if (!/Circular/.test(msg)) {

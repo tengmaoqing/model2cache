@@ -1,6 +1,6 @@
 
 /* eslint-disable */
-Vue.use(VueDataCache);
+Vue.use(Model2Cache.VueCache);
 
 const vueOpt = {
   el: '#app',
@@ -47,7 +47,7 @@ new Vue({
     text: 1
   },
   cache: {
-    cachePrefix: '__Tprefix__',
+    namespace: '__Tprefix__',
     cacheKeys: [
       'text'
     ]

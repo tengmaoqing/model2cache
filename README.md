@@ -1,46 +1,64 @@
-# vue-cache-data
-auto save **vue.data** into localStore or memery when **vue.data** change
+# model2cache
+bind **model** with localStore or memery
 # Examples
 - [example code](https://github.com/tengmaoqing/vue-cache-data/tree/master/example) 
 - [example online](https://tengmaoqing.github.io/vue-cache-data/example/index.html)
 
-# Usage
+# Usage with Vue
 ## registe
 ```javascript
-import VueCacheData from 'vue-cache-data'
-Vue.use(VueCacheData, options);
+import { VueCache } from 'model2cahce'
+Vue.use(VueCache, options);
+
+// in component
+{
+  data () {
+    return {
+      someKey: 1,
+      form: {
+        name: 'tm'
+      }
+    }
+  },
+  ...otherVueOptions,
+  // inject model2cahce options
+  cache: {
+    cacheKeys: ['form.name']
+  }
+}
 ```
 
 ## options
-#### cachePrefix [String]
-prefix of the cache key
 
-## config cacheKeys
+#### cacheKeys
+model keys need to bind
+
 ```javascript
 export default {
   data() {
     return {
       form: {
         text: '',
-        memtext: '',
-        radio: false,
-        select: ''
+        memtext: 8
+        select: []
       },
       count: 0,
-      other: 'xx'
     };
   },
-  // components option
-  cachePrefix: 'data_cache',
-  cacheKeys: [
-    'form.text',
-    {
-      key: 'form.memtext',
-      useLocalStore: false
-    },
-    'form.radio',
-    'form.select',
-    'count'
-  ]
+  cache: {
+    cachePrefix: 'cache_in_vue',
+    cacheKeys: [
+      'form.text',
+      {
+        key: 'form.memtext',
+        useLocalStore: false
+      },
+      'form.select',
+      'count'
+    ]
+  }
 }
 ```
+
+#### namespace [String]
+namespace of cache
