@@ -1742,7 +1742,7 @@
             return;
           }
 
-          this.$autoSave = new Model2Cache(this, _objectSpread2({}, options, {
+          this.$model2cache = new Model2Cache(this, _objectSpread2({}, options, {
             watcher: (key, cb) => {
               return this.$watch(key, cb);
             }
@@ -1754,7 +1754,7 @@
             return;
           }
 
-          this.$autoSave.destory();
+          this.$model2cache.destory();
         }
 
       });

@@ -178,7 +178,7 @@ export const VueCache = {
         if (!this.$options[options.optionKey]) {
           return
         }
-        this.$autoSave = new Model2Cache(this, {
+        this.$model2cache = new Model2Cache(this, {
           ...options,
           watcher: (key, cb) => {
             return this.$watch(key, cb)
@@ -189,7 +189,7 @@ export const VueCache = {
         if (!this.$options[options.optionKey]) {
           return
         }
-        this.$autoSave.destory()
+        this.$model2cache.destory()
       }
     })
   }
