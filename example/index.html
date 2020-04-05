@@ -29,6 +29,13 @@
   <body>
     <div id="app">
       <v-app v-cloak>
+        <v-app-bar
+          color="deep-purple accent-4"
+          dark
+          app
+        >
+          <v-toolbar-title>Model2Cache</v-toolbar-title>
+        </v-app-bar>
         <v-content>
           <v-container fluid>
             <v-card>
@@ -80,6 +87,12 @@
                                 @click="reset"
                               >
                                 clear cache
+                              </v-btn>
+                              <v-btn
+                                @click="reloadPage"
+                              >
+                                <v-icon>mdi-reload</v-icon>
+                                reload
                               </v-btn>
                             </v-form>
                           </v-col>
