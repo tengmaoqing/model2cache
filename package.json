@@ -1,16 +1,16 @@
 {
-  "name": "vue-data-cache",
-  "version": "0.1.4",
+  "name": "model2cache",
+  "version": "1.0.0",
   "scripts": {
     "build": "node scripts/build.js",
     "commit": "git-cz",
     "release": "bash scripts/release.sh",
     "release:note": "node scripts/gen-release-note.js",
     "lint": "eslint src",
-    "test": "karma start test/karma.conf.js"
+    "test:e2e": "karma start test/karma.conf.js"
   },
-  "main": "dist/vueDataCache.umd.js",
-  "module": "dist/vueDataCache.esm.js",
+  "main": "dist/model2cache.umd.js",
+  "module": "dist/model2cache.esm.js",
   "dependencies": {
     "lodash": "^4.17.15"
   },
@@ -60,7 +60,8 @@
   "keywords": [
     "vue",
     "cache",
-    "vue-data-cache"
+    "form",
+    "form2cache"
   ],
   "homepage": "https://github.com/tengmaoqing/vue-cache-data",
   "eslintConfig": {

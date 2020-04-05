@@ -3,56 +3,113 @@
   <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>DATA Cahce</title>
+    <title>Model2Cache</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
     <style>
-      .container {
-        width: 320px;
-        margin: 50px auto;
+      .card {
+        margin: 30px 0;
+        padding: 15px 200px;
+      }
+      body {
+        margin: 0;
+      }
+      [v-cloak] {
+        display: none;
       }
     </style>
+    
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+    <script src="../dist/model2cache.umd.js"></script>
   </head>
   <body>
-    <h4>基本使用</h4>
     <div id="app">
-      <div class="container">
-        <div>
-          <label for="">自动保存</label>
-          <input type="text" v-model="form.text" />
-        </div>
-        <div>
-          <label for="">只存内层</label>
-          <input type="text" v-model="form.memtext" />
-        </div>
-        <div>
-          <label for="">
-            radio
-            <input type="radio" v-model="form.radio" name="vvv" value="1" />
-            <input type="radio" v-model="form.radio" name="vvv" value="12" />
-          </label>
-        </div>
-        select
-        <select name="" id="" v-model="form.select">
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-        </select>
-        <div>count {{ count }} <button @click="counter">counter</button></div>
-        <button @click="reset">reset</button>
-        <button @click="reload">reload</button>
-      </div>
+      <v-app v-cloak>
+        <v-content>
+          <v-container fluid>
+            <v-card>
+              <v-tabs
+                background-color="deep-purple accent-4"
+                center-active
+                v-model="tab"
+                dark
+              >
+                <v-tab
+                >
+                  基本使用
+                </v-tab>
+                <v-tab
+                >
+                  缓存作用域
+                </v-tab>
+                
+              </v-tabs>
+              <v-tabs-items v-model="tab">
+                  <v-tab-item>
+                    <v-card>
+                      <v-card-text>
+                        <div>修改表单后，刷新</div>
+                      </v-card-text>
+                      <v-container>
+                        <v-row justify="space-between">
+                          <v-col cols="auto">
+                            <v-form
+                            >
+                              <p>绑定数组{{ form.selected }}</p>
+                              <v-checkbox hide-details v-model="form.selected" label="John" value="John"></v-checkbox>
+                              <v-checkbox hide-details v-model="form.selected" label="Jacob" value="Jacob"></v-checkbox>
+                              <v-text-field v-model="form.text" label="绑定string"></v-text-field>
+                              <v-slider
+                                v-model="form.number"
+                                label="绑定数字"
+                              ></v-slider>
+                              <v-checkbox
+                                v-model="form.checkbox"
+                                label="绑定布尔值 Boolean"
+                              ></v-checkbox>
+                              <v-alert type="success" v-show="cleared" >
+                                表单相关的 localstore 已经被清理，<v-btn text small color="primary" @click="reloadPage">刷新查看</v-btn>
+                              </v-alert>
+                              <v-btn
+                                color="error"
+                                class="mr-4"
+                                @click="reset"
+                              >
+                                clear cache
+                              </v-btn>
+                            </v-form>
+                          </v-col>
+                        </v-row>
+                      </v-container>
+                    </v-card>
+                  </v-tab-item>
+
+                  <v-tab-item
+                  >
+                    <v-card>
+                      <v-card-text>
+                        <div>自定义namespace</div>
+                      </v-card-text>
+                      <v-container>
+                        <v-row justify="space-between">
+                          <v-col cols="auto">
+                            <Namespace2></Namespace2>
+                            <Namespace1></Namespace1>
+                          </v-col>
+                        </v-row>
+                      </v-container>
+                    </v-card>
+                  </v-tab-item>
+              </v-tabs-items>
+            </v-card>
+          </v-container>
+        </v-content>
+      </v-app>
     </div>
-
-    <h4>自定义cachePrefix</h4>
-    <section id="foo">
-        <div class="container">
-          <label for="">修改为 custom_key </label>
-          <input type="text" v-model="text" />
-        </div>
-    </section>
-
-    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-    <script src="../dist/VueDataCache.umd.js"></script>
     <script src="./index.js"></script>
   </body>
 </html>

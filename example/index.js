@@ -1,17 +1,55 @@
 
 /* eslint-disable */
-Vue.use(VueDataCache);
+Vue.use(Model2Cache.VueCache);
+Vue.use(Vuetify)
+
+const Namespace1 = {
+  template: `<v-text-field v-model="text" label="作用域1里的text"></v-text-field>`,
+  data () {
+    return {
+      text: ''
+    }
+  },
+  cache: {
+    namespace: 'namespace1',
+    cacheKeys: [
+      'text'
+    ]
+  }
+}
+
+const Namespace2 = {
+  template: `<v-text-field v-model="text" label="作用域2里的text"></v-text-field>`,
+  data () {
+    return {
+      text: ''
+    }
+  },
+  cache: {
+    namespace: 'namespace2',
+    cacheKeys: [
+      'text'
+    ]
+  }
+}
 
 const vueOpt = {
   el: '#app',
+  vuetify: new Vuetify(),
+  components: {
+    Namespace1,
+    Namespace2
+  },
   data: {
+    tab: 0,
     form: {
       text: '',
+      number: 1,
       memtext: '',
-      radio: false,
-      select: ''
+      checkbox: false,
+      selected: []
     },
-    count: 0
+    cleared: false
   },
   cache: {
     cacheKeys: [
@@ -20,36 +58,21 @@ const vueOpt = {
         key: 'form.memtext',
         useLocalStore: false
       },
-      'form.radio',
-      'form.select',
-      'count'
+      'form.number',
+      'form.checkbox',
+      'form.selected',
+      'tab'
     ]
   },
   methods: {
-    counter () {
-      this.count += 1
-    },
     reset () {
-      localStorage.clear()
-      this.reload()
+      this.$model2cache.clear()
+      this.cleared = true
     },
-    reload () {
+    reloadPage () {
       location.reload()
     }
   }
 }
 
-const vm = new Vue(vueOpt);
-
-new Vue({
-  el: '#foo',
-  data: {
-    text: 1
-  },
-  cache: {
-    cachePrefix: '__Tprefix__',
-    cacheKeys: [
-      'text'
-    ]
-  }
-})
+new Vue(vueOpt)
