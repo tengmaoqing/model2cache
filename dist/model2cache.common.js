@@ -5,106 +5,148 @@
  */
 'use strict';
 
-Object.defineProperty(exports, '__esModule', { value: true });
-
 function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
 
-var get = _interopDefault(require('lodash/get'));
-var set = _interopDefault(require('lodash/set'));
-var isString = _interopDefault(require('lodash/isString'));
-var isFunction = _interopDefault(require('lodash/isFunction'));
+var set = _interopDefault(require('lodash-es/set'));
+var isFunction = _interopDefault(require('lodash-es/isFunction'));
 
-function _defineProperty(obj, key, value) {
-  if (key in obj) {
-    Object.defineProperty(obj, key, {
-      value: value,
-      enumerable: true,
-      configurable: true,
-      writable: true
-    });
-  } else {
-    obj[key] = value;
-  }
+/*! *****************************************************************************
+Copyright (c) Microsoft Corporation. All rights reserved.
+Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+this file except in compliance with the License. You may obtain a copy of the
+License at http://www.apache.org/licenses/LICENSE-2.0
 
-  return obj;
+THIS CODE IS PROVIDED ON AN *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED
+WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE,
+MERCHANTABLITY OR NON-INFRINGEMENT.
+
+See the Apache Version 2.0 License for specific language governing permissions
+and limitations under the License.
+***************************************************************************** */
+
+var __assign = function() {
+    __assign = Object.assign || function __assign(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+
+function __spreadArrays() {
+    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
+    for (var r = Array(s), k = 0, i = 0; i < il; i++)
+        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
+            r[k] = a[j];
+    return r;
 }
 
-function ownKeys(object, enumerableOnly) {
-  var keys = Object.keys(object);
+var _a;
 
-  if (Object.getOwnPropertySymbols) {
-    var symbols = Object.getOwnPropertySymbols(object);
-    if (enumerableOnly) symbols = symbols.filter(function (sym) {
-      return Object.getOwnPropertyDescriptor(object, sym).enumerable;
-    });
-    keys.push.apply(keys, symbols);
+var StoreType;
+
+(function (StoreType) {
+  StoreType[StoreType["localStorage"] = 1] = "localStorage";
+  StoreType[StoreType["sessionStorage"] = 2] = "sessionStorage";
+  StoreType[StoreType["memory"] = 3] = "memory";
+})(StoreType || (StoreType = {}));
+
+var Mem = {};
+var storages = (_a = {}, _a[StoreType.localStorage] = window.localStorage, _a[StoreType.sessionStorage] = window.sessionStorage, _a[StoreType.memory] = {
+  setItem: function setItem(key, value) {
+    Mem[key] = value;
+  },
+  getItem: function getItem(key) {
+    return Mem[key];
+  },
+  removeItem: function removeItem(key) {
+    Mem[key] = null;
+    delete Mem[key];
   }
+}, _a);
 
-  return keys;
-}
-
-function _objectSpread2(target) {
-  for (var i = 1; i < arguments.length; i++) {
-    var source = arguments[i] != null ? arguments[i] : {};
-
-    if (i % 2) {
-      ownKeys(Object(source), true).forEach(function (key) {
-        _defineProperty(target, key, source[key]);
-      });
-    } else if (Object.getOwnPropertyDescriptors) {
-      Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
-    } else {
-      ownKeys(Object(source)).forEach(function (key) {
-        Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
-      });
+var Store =
+/** @class */
+function () {
+  function Store(storage, storeType) {
+    if (storage) {
+      this.storage = storage;
+      return;
     }
+
+    this.storage = storages[storeType];
   }
 
-  return target;
-}
+  Store.prototype.set = function (key, value) {
+    this.storage.setItem(key, JSON.stringify(value));
+  };
 
-const DEFAULT_GLOBAL_CACHE_KEY = '__TMQ_DEFAULT_KEY__';
-const DEFAULT_OPTIONS_KEY = 'cache';
-const MemCache = {};
+  Store.prototype.get = function (key) {
+    return JSON.parse(this.storage.getItem(key));
+  };
 
-const log = function log() {
-  for (var _len = arguments.length, arg = new Array(_len), _key = 0; _key < _len; _key++) {
-    arg[_key] = arguments[_key];
-  }
+  Store.prototype["delete"] = function (key) {
+    return this.storage.removeItem(key);
+  };
 
-  // eslint-disable-next-line no-console
-  console.log('[cache-data]:', ...arg);
+  return Store;
+}();
+
+var DEFAULT_GLOBAL_CACHE_KEY = '__TMQ_DEFAULT_KEY__';
+
+var log = function log() {
+  var arg = [];
+
+  for (var _i = 0; _i < arguments.length; _i++) {
+    arg[_i] = arguments[_i];
+  } // eslint-disable-next-line no-console
+
+
+  console.log.apply(console, __spreadArrays(['[cache-data]:'], arg));
 };
 
-const warn = function warn() {
-  for (var _len2 = arguments.length, arg = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-    arg[_key2] = arguments[_key2];
-  }
+var warn = function warn() {
+  var arg = [];
 
-  // eslint-disable-next-line no-console
-  console.warn('[cache-data]:', ...arg);
+  for (var _i = 0; _i < arguments.length; _i++) {
+    arg[_i] = arguments[_i];
+  } // eslint-disable-next-line no-console
+
+
+  console.warn.apply(console, __spreadArrays(['[cache-data]:'], arg));
 };
-/**
- * 默认存储在 LocalStore，
- * 可以配置存在内存中，在 路由跳转时保存，刷新丢失。
- */
 
-/**
- *   new Model2Cache({
- *     namespace: '__prefix__'
- *   })
- */
+var Model2Cache =
+/** @class */
+function () {
+  function Model2Cache() {
+    var arg = [];
 
+    for (var _i = 0; _i < arguments.length; _i++) {
+      arg[_i] = arguments[_i];
+    }
 
-class Model2Cache {
-  constructor() {
-    this.init(...arguments);
+    this.storeType = StoreType.localStorage;
+    this.init.apply(this, arg);
   }
 
-  init(vm) {
-    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-    let componentsOptions = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-    this.formModel = vm;
+  Model2Cache.prototype.init = function (formModel, options, componentsOptions) {
+    if (formModel === void 0) {
+      formModel = [];
+    }
+
+    if (options === void 0) {
+      options = {};
+    }
+
+    if (componentsOptions === void 0) {
+      componentsOptions = {};
+    }
+
+    this.formModel = formModel;
     this.$cacheOptions = componentsOptions;
 
     if (Array.isArray(this.$cacheOptions)) {
@@ -113,15 +155,15 @@ class Model2Cache {
       };
     }
 
-    this.$cacheOptions = _objectSpread2({}, options, {}, this.$cacheOptions);
+    this.$cacheOptions = __assign(__assign({}, options), this.$cacheOptions);
     this.isdebug = this.$cacheOptions.debug;
-    this.cacheKeys = (this.$cacheOptions.cacheKeys || []).map(item => {
-      let obj = {
+    this.cacheKeys = (this.$cacheOptions.cacheKeys || []).map(function (item) {
+      var obj = {
         key: '',
         useLocalStore: true
       };
 
-      if (isString(item)) {
+      if (typeof item === 'string') {
         obj.key = item;
       } else {
         Object.assign(obj, item);
@@ -130,172 +172,120 @@ class Model2Cache {
       return obj;
     });
     this.namespace = this.$cacheOptions.namespace || DEFAULT_GLOBAL_CACHE_KEY;
-    this.MemCache = MemCache;
+    this.store = new Store(null, this.storeType);
     this.applyData();
     this.watchData();
-  }
+  };
 
-  getKeyConfig(key) {
-    return this.cacheKeys.find(keyObj => keyObj.key === key) || {};
-  }
+  Model2Cache.prototype.getTruthKey = function (key) {
+    return "" + this.namespace + key;
+  };
 
-  getLocalData(key) {
-    const cachev = localStorage.getItem("".concat(this.namespace).concat(key));
+  Model2Cache.prototype.applyData = function () {
+    var _this = this;
 
-    if (!cachev) {
-      return get(this.formModel, key);
-    }
+    this.cacheKeys.forEach(function (_a) {
+      var key = _a.key;
 
-    return JSON.parse(cachev);
-  }
+      var v = _this.store.get(_this.getTruthKey(key));
 
-  getMemData(key) {
-    return this.MemCache[key];
-  }
+      if (!v) {
+        return;
+      }
 
-  getData(key) {
-    const {
-      useLocalStore
-    } = this.getKeyConfig(key);
-
-    if (useLocalStore) {
-      return this.getLocalData(key);
-    }
-
-    this.getMemData(key);
-  }
-
-  setLocalDate(key, v) {
-    localStorage.setItem("".concat(this.namespace).concat(key), JSON.stringify(v));
-  }
-
-  setMemData(key, v) {
-    this.MemCache[key] = v;
-  }
-
-  setData(key, v) {
-    const {
-      useLocalStore
-    } = this.getKeyConfig(key);
-
-    if (useLocalStore) {
-      this.setLocalDate(key, v);
-      return;
-    }
-
-    this.setMemData(key, v);
-  }
-
-  applyData() {
-    this.cacheKeys.forEach((_ref) => {
-      let {
-        key
-      } = _ref;
-      const v = this.getData(key);
-      this.isdebug && log('setModel', key, v);
-      set(this.formModel, key, v);
+      _this.isdebug && log('setModel', key, v);
+      set(_this.formModel, key, v);
     });
-  }
+  };
 
-  watchData() {
+  Model2Cache.prototype.watchData = function () {
+    var _this = this;
+
     if (!isFunction(this.$cacheOptions.watcher)) {
       this.isdebug && warn('需要提供一个 `options.watcher` 用来接收 `model` 的变化, 否则`model`的变化将不会被自动记录');
       return;
     }
 
-    this.watchs = this.cacheKeys.map((_ref2) => {
-      let {
-        key
-      } = _ref2;
-      return this.$cacheOptions.watcher(key, nv => {
-        this.isdebug && log('watch', key, nv);
-        this.setData(key, nv);
+    this.watchs = this.cacheKeys.map(function (_a) {
+      var key = _a.key;
+      return _this.$cacheOptions.watcher(key, function (nv) {
+        _this.isdebug && log('watch', key, nv);
+
+        _this.store.set(_this.getTruthKey(key), nv);
       });
     });
-  }
+  };
 
-  destory() {
+  Model2Cache.prototype.destory = function () {
     if (!this.watchs) {
       return;
     }
 
-    this.watchs.forEach(watchFn => watchFn());
-  }
+    this.watchs.forEach(function (watchFn) {
+      return watchFn();
+    });
+  };
 
-  deleteKey(key) {
-    const {
-      useLocalStore
-    } = this.getKeyConfig(key);
+  Model2Cache.prototype.deleteKey = function (key) {
+    this.store["delete"](this.getTruthKey(key));
+  };
 
-    if (useLocalStore) {
-      localStorage.removeItem("".concat(this.namespace).concat(key));
-      return;
-    }
+  Model2Cache.prototype.clear = function (key) {
+    var _this = this;
 
-    this.MemCache[key] = null;
-  }
-
-  clear(key) {
     if (key) {
       this.deleteKey(key);
       return;
     }
 
-    this.cacheKeys.map((_ref3) => {
-      let {
-        key
-      } = _ref3;
-      this.deleteKey(key);
+    this.cacheKeys.map(function (_a) {
+      var key = _a.key;
+
+      _this.deleteKey(key);
     });
-  }
+  };
 
-  reset() {}
+  return Model2Cache;
+}();
 
-}
-/**
- *  components Config / key config / global config
- * 
- *  export default {
- *    cache: ['key', 'data.key'],
- *    cache: {
- *      cacheKeys: ['key', 'data.key', {
- *        key: 'otherKey',
-          useLocalStore: false
- *      }],
- *      namespace: '__prefix__'
- *    }
- *  }
- */
+var DEFAULT_OPTIONS_KEY = 'cache';
+var VueCache = {
+  install: function install(Vue, options) {
+    if (options === void 0) {
+      options = {};
+    }
 
-const VueCache = {
-  install(Vue) {
-    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     options.optionKey = options.optionKey || DEFAULT_OPTIONS_KEY;
     Vue.mixin({
-      mounted() {
+      mounted: function mounted() {
+        var _this = this;
+
         if (!this.$options[options.optionKey]) {
           return;
         }
 
-        this.$model2cache = new Model2Cache(this, _objectSpread2({}, options, {
-          watcher: (key, cb) => {
-            return this.$watch(key, cb);
+        this.$model2cache = new Model2Cache(this, __assign(__assign({}, options), {
+          watcher: function watcher(key, cb) {
+            return _this.$watch(key, cb);
           }
         }), this.$options[options.optionKey]);
       },
-
-      destroyed() {
+      destroyed: function destroyed() {
         if (!this.$options[options.optionKey]) {
           return;
         }
 
         this.$model2cache.destory();
       }
-
     });
   }
-
 };
 
-exports.Model2Cache = Model2Cache;
-exports.VueCache = VueCache;
+// }
+
+var cache = {
+  VueCache: VueCache,
+  Model2Cache: Model2Cache
+};
+
+module.exports = cache;

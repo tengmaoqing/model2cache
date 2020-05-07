@@ -1,22 +1,5 @@
 // Karma configuration
 // Generated on Fri Feb 07 2020 15:05:47 GMT+0800 (中国标准时间)
-// const webpack = require('webpack')
-
-const webpackConfig = {
-  mode: 'development',
-  module: {
-    rules: [
-      {
-        test: /\.js$/,
-        loader: 'babel-loader',
-        exclude: /node_modules/
-      }
-    ]
-  },
-  plugins: [
-  ],
-  devtool: '#inline-source-map'
-}
 
 module.exports = function(config) {
   config.set({
@@ -27,12 +10,12 @@ module.exports = function(config) {
 
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-    frameworks: ['jasmine'],
-
+    frameworks: ['jasmine', 'karma-typescript'],
 
     // list of files / patterns to load in the browser
     files: [
-      { pattern: './**/*.spec.js', watched: false }
+      { pattern: '../src/*.ts', included: true, served: true },
+      { pattern: '../test/*.ts', included: true, served: true }
     ],
 
 
@@ -44,6 +27,8 @@ module.exports = function(config) {
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
+      '../test/*.spec.ts': ['karma-typescript'],
+      '../src/*.ts': ['karma-typescript']
     },
 
 
@@ -52,31 +37,22 @@ module.exports = function(config) {
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
     reporters: ['progress'],
     
-    preprocessors: {
-      './**/*.spec.js': ['webpack']
+    karmaTypescriptConfig: {
+      bundlerOptions: {
+        entrypoints: /\.spec\.ts$/,
+        transforms: [
+          require("karma-typescript-es6-transform")()
+        ],
+				exclude: ['vue/types/vue', 'vuex/types/index']
+			},
+			compilerOptions: {
+				module: 'commonjs'
+			},
+			tsconfig: '../tsconfig.json',
+			coverageOptions: {
+				exclude: [/interfaces\.ts$/, /test/]
+			}
     },
-    webpack: webpackConfig,
-    // plugins: [
-    //   'karma-jasmine',
-    //   'karma-webpack',
-    //   'karma-chrome-launcher'
-    // ],
-    // rollupPreprocessor: {
-    //   plugins: [node(), cjs()],
-    //   output: {
-    //       format: 'iife', // Helps prevent naming collisions.
-    //       name: 'Krama_Test', // Required for 'iife' format.
-    //       sourcemap: 'inline', // Sensible for testing.
-    //   },
-    // },
-    // customPreprocessors: {
-    //   rollupBabel: {
-    //     base: 'rollup',
-    //     options: {
-    //         plugins: [babel()],
-    //     },
-    //   },
-    // },
 
     // web server port
     port: 9876,
@@ -102,7 +78,7 @@ module.exports = function(config) {
 
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits
-    singleRun: false,
+    singleRun: true,
 
     // Concurrency level
     // how many browser should be started simultaneous
