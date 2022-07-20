@@ -36,7 +36,7 @@
     "rollup-plugin-babel": "^4.4.0",
     "rollup-plugin-commonjs": "^9.2.0",
     "rollup-plugin-node-resolve": "^4.0.0",
-    "terser": "^3.14.1",
+    "terser": "^4.8.1",
     "validate-commit-msg": "^2.14.0",
     "vue": "^2.6.11",
     "webpack": "^4.42.1"
